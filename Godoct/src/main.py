@@ -96,16 +96,72 @@ def parse_gdscript_file(arg_gdscript_file_path):
         print("file open error")
     
     if len(file_content) > 1:
-        property_output = parsevar.find_var_data(file_content)
-        function_output = parsefunc.find_function_data(file_content)
+        output_all_properties = parsevar.find_var_data(file_content)
+        output_all_functions = parsefunc.find_function_data(file_content)
 
-    # TESTING ONLY/REMOVE FOR LIVE
-    print("\nPROPERTIES")
-    for i in property_output:
-        print(i)
-    # print("\nMETHODS")
-    # for i in function_output:
-    #     print(i)
+        # sort properties into constituent lists
+        all_signals = []
+        all_enums = []
+        all_consts = []
+        all_export_vars = []
+        all_public_vars = []
+        all_private_vars = []
+        all_onready_vars = []
+
+        # properties are organised by the prefix first (variables are further organised by name)
+        for property_entry in output_all_properties:
+            if isinstance(property_entry, dict):
+                if "prefix" in property_entry:
+                    assert(isinstance(property_entry["prefix"], str))
+                    # sort by type to the correct list
+                    if "signal" in property_entry["prefix"]:
+                        all_signals.append(property_entry)
+                    elif "enum" in property_entry["prefix"]:
+                        all_enums.append(property_entry)
+                    elif "const" in property_entry["prefix"]:
+                        all_consts.append(property_entry)
+                    
+                    # extra categorising for variables
+                    elif "var" in property_entry["prefix"]:
+                        # get if export variant or onready
+                        if property_entry["prefix"].startswith("@export"):
+                            all_export_vars.append(property_entry)
+                        elif property_entry["prefix"].startswith("@onready"):
+                            all_onready_vars.append(property_entry)
+                        # sort by public/private
+                        else:
+                            if "name" in property_entry:
+                                assert(isinstance(property_entry["name"], str))
+                                if property_entry["name"].startswith("_"):
+                                    all_private_vars.append(property_entry)
+                                else:
+                                    all_public_vars.append(property_entry)
+
+        # TESTING ONLY/REMOVE FOR LIVE
+        print("\nSIGNAL PROPERTIES")
+        for i in all_signals:
+            print(i)
+        print("\nENUM PROPERTIES")
+        for i in all_enums:
+            print(i)
+        print("\nCONST PROPERTIES")
+        for i in all_consts:
+            print(i)
+        print("\nEXPORT VAR PROPERTIES")
+        for i in all_export_vars:
+            print(i)
+        print("\nONREADY VAR PROPERTIES")
+        for i in all_onready_vars:
+            print(i)
+        print("\nPUBLIC VAR PROPERTIES")
+        for i in all_public_vars:
+            print(i)
+        print("\nPRIVATE VAR PROPERTIES")
+        for i in all_private_vars:
+            print(i)
+        print("\nMETHODS")
+        for i in output_all_functions:
+            print(i)
 
 
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
