@@ -53,6 +53,8 @@ def parse_gdscript_file(arg_gdscript_file_path):
             func_line = ""
     for i in functions:
         print(i)
+    print("I AM PARSER")
+    print("!")
 
 
 if __name__ == "__main__":

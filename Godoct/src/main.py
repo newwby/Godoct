@@ -1,5 +1,6 @@
 import os
 import re
+import parser
 
 GODOCT_DOCS_DIRECTORY = "docs"
 GODOCT_INCLUDE_FILE_NAME = "godoct_include.txt"
@@ -43,14 +44,14 @@ def get_included_file_names():
 
 # make sure to pass include as first
 def get_matched_gdscripts(arg_allowed_file_names, arg_file_paths):
-    print(f"\ntest print list 1 = {arg_allowed_file_names}")
-    print(f"\ntest print list 2 = {arg_file_paths}")
+    # print(f"\ntest print list 1 = {arg_allowed_file_names}")
+    # print(f"\ntest print list 2 = {arg_file_paths}")
     output = []
     for file_path in arg_file_paths:
         file_name = os.path.basename(file_path)
         if isinstance(file_name, str) and file_name in arg_allowed_file_names:
             output.append(file_path)
-    print(f"\nvalid output = {output}")
+    # print(f"\nvalid output = {output}")
     return output
 
 
@@ -63,3 +64,4 @@ def get_own_directory():
 
 if __name__ == "__main__":
     valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
+    parser.parse_gdscript_file(parser.TEST_FILE_PATH)
