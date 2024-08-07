@@ -27,16 +27,19 @@ def parse_gdscript_file(arg_gdscript_file_path):
         "properties": [],
         "functions": [],
     }
+    try:
+        gdfile = open(arg_gdscript_file_path)
+    except:
+        print("file open error")
+        return
 
-    def find_functions():
-        try:
-            gdfile = open(arg_gdscript_file_path)
-        except:
-            print("file open error")
-            return
+    def find_function_data():
+        # tracking multiline function declarations
         func_line = ""
         building_func_line = False
-        function_line_output = []
+        # final output
+        function_data_output = []
+
         for line in gdfile.readlines():
             if not building_func_line:
                 if line.startswith("func") or line.startswith("static func"):
@@ -49,12 +52,13 @@ def parse_gdscript_file(arg_gdscript_file_path):
                 building_func_line = False
                 # re.sub('\s{2,}', ' ', func_line)
                 cleaned_line = re.sub(r'[ \t]+', ' ', func_line)
-                function_line_output.append(cleaned_line.replace("\n", ""))
+                function_line_as_dict = parse_function_line(cleaned_line.replace("\n", ""))
+                function_data_output.append(function_line_as_dict)
                 func_line = ""
-        return function_line_output
+        return function_data_output
 
     # pass find_functions as argument (an array of strings representing each function line)
-    def parse_functions(arg_function_lines, arg_include_private_functions = False):
+    def parse_function_line(arg_function_line):
         # submethod to turn a string of function arguments into a dictionary
         # becomes an entry in the list under parsed_entry["arguments"]
         def parse_function_arguments(arg_function_arguments_string):
@@ -72,10 +76,10 @@ def parse_gdscript_file(arg_gdscript_file_path):
                     arg_split = arg
                     arg_name = arg
                     if ":" in arg:
-                       arg_type = str(arg.split(":")[1]).strip()
-                       if "=" in arg_type:
-                           arg_type = arg_type.split("=")[0].strip()
-                       categorised_args["type"] = arg_type
+                        arg_type = str(arg.split(":")[1]).strip()
+                    if "=" in arg_type:
+                        arg_type = arg_type.split("=")[0].strip()
+                    categorised_args["type"] = arg_type
                     if "=" in arg:
                         categorised_args["default"] = str(arg.split("=")[1].strip())
                     if "=" in arg_name:
@@ -88,40 +92,43 @@ def parse_gdscript_file(arg_gdscript_file_path):
                 
                 return args_parsed
         
-        all_parsed_output = []
-        for line in arg_function_lines:
-            parsed_entry = {
-                "prefix": False,
-                "name": "",
-                "arguments": [],
-                "return": ""
-            }
-            # get if static or non-static function
-            split_line = line
-            if "static func " in line:
-                parsed_entry["prefix"] = "static func"
-                split_line = split_line.split("static func ")[1]
-            elif "func " in line:
-                parsed_entry["prefix"] = "func"
-                split_line = split_line.split("func ")[1]
-            else:
-                print("ERROR ", line)
-            
-            # get function name
-            parsed_entry["name"] = split_line.split("(")[0]
-            parsed_entry["arguments"] = parse_function_arguments(split_line.split("(")[1].split(")")[0])
-            
-            # if a return type is specified in the function line, isolate it
-            if "->" in split_line:
-                parsed_entry["return"] = split_line.split("->")[1].strip().replace(":", "")
-            
-            if arg_include_private_functions or str(parsed_entry["name"]).startswith("_") == False:
-                all_parsed_output.append(parsed_entry)
+        parsed_entry = {
+            "prefix": False,
+            "name": "NAME_NOT_FOUND",
+            "arguments": [],
+            "return": "unspecified"
+        }
+        # get if static or non-static function
+        split_line = arg_function_line
+        if "static func " in arg_function_line:
+            parsed_entry["prefix"] = "static func"
+            split_line = split_line.split("static func ")[1]
+        elif "func " in arg_function_line:
+            parsed_entry["prefix"] = "func"
+            split_line = split_line.split("func ")[1]
+        else:
+            print("ERROR ", arg_function_line)
         
-        return all_parsed_output
-
+        # get function name
+        parsed_entry["name"] = split_line.split("(")[0]
+        parsed_entry["arguments"] = parse_function_arguments(split_line.split("(")[1].split(")")[0])
+        
+        # if a return type is specified in the function line, isolate it
+        if "->" in split_line:
+            parsed_entry["return"] = split_line.split("->")[1].strip().replace(":", "")
+        
+        return parsed_entry
     
-    function_output = parse_functions(find_functions())
+    # pass find_functions as argument (an array of strings representing each function line)
+    def parse_function_documentation(arg_function_lines, arg_include_private_functions = False):
+        documentation_line = ""
+        for line in gdfile.readlines():
+            if line.startswith("##"):
+                documentation_line += line
+            else:
+                documentation_line = ""
+    
+    function_output = find_function_data() #parse_functions(find_functions())
     # for i in function_output:
     #   # add function documentation by using name
     for i in function_output:
