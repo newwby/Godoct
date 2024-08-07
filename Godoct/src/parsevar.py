@@ -1,25 +1,7 @@
 import re
+import utilparser
 
 ## NOTE that class property and function definitions aren't being picked up because they're indented
-
-def infer_type(arg_string):
-    arg_string = str(arg_string)
-    if "\"" in arg_string:
-        return "string"
-    elif arg_string == "true" or arg_string == "false":
-        return "bool"
-    elif "." in arg_string:
-        return "float"
-    elif "[" in arg_string:
-        return "array"
-    elif "{" in arg_string:
-        return "dictionary"
-    elif str(arg_string).isnumeric:
-        return "int"
-    elif arg_string[1:].isnumeric:
-        return "int"
-    else:
-        return "unknown"
 
 # should be passed an open file content
 def find_var_data(arg_file_lines):
@@ -40,7 +22,11 @@ def find_var_data(arg_file_lines):
         cleaned_var_line = var_line.replace("\n", "")
         cleaned_var_line = cleaned_var_line.replace("\\", "")
         cleaned_var_line = re.sub(r'[ \t]+', ' ', cleaned_var_line)
-        var_data = parse_var_line(cleaned_var_line)
+        var_data = {}
+        if cleaned_var_line.startswith("signal"):
+            var_data = parse_signal_line(cleaned_var_line)
+        else:
+            var_data = parse_var_line(cleaned_var_line)
         cleaned_doc_line = doc_line.replace("#", "")
         cleaned_doc_line = cleaned_doc_line.replace("\n", "")
         cleaned_doc_line = re.sub(r'[ \t]+', ' ', cleaned_doc_line.strip())
@@ -49,6 +35,36 @@ def find_var_data(arg_file_lines):
         var_line = ""
         doc_line = ""
     
+    def parse_signal_line(arg_line):
+        # signal arguments can be typed
+        # prefix is always signal
+        output = {
+            "prefix": "signal",
+            "name": "",
+            "arguments": "",
+        }
+        signal_name = arg_line.split("signal", 1)[1].strip()
+        if "(" in signal_name:
+            signal_name = signal_name.split("(")[0].strip()
+        output["name"] = signal_name
+
+        if "(" in arg_line:
+            all_arguments = arg_line.split("(")[1].replace(")", "").strip()
+            all_arguments = all_arguments.split(",")
+            output_arguments = []
+            for signal_argstr in all_arguments:
+                signal_argument_data = {"name": "", "type": ""}
+                signal_argument_as_tuple = utilparser.categorise_property(signal_argstr)
+                signal_argument_data = {
+                    "name": signal_argument_as_tuple[0],
+                    "type": signal_argument_as_tuple[1],
+                }
+                output_arguments.append(signal_argument_data)
+
+            output["arguments"] = output_arguments
+
+        return output
+
     def parse_var_line(arg_line):
         output = {
             "prefix": "",
@@ -78,38 +94,10 @@ def find_var_data(arg_file_lines):
 
         # var and const parsing
         else:
-            # if inferred type from default arg
-            if ":=" in var_remainder:
-                var_remainder = var_remainder.split(":=")
-                var_name = var_remainder[0].strip()
-                var_default = var_remainder[1].strip()
-                var_type = infer_type(var_default)
-            else:
-                # get specified type and default arg
-                if ":" in var_remainder and "=" in var_remainder:
-                    var_remainder = var_remainder.split(":")
-                    var_name = var_remainder[0]
-                    var_remainder[1] = var_remainder[1].split("=")
-                    var_type = var_remainder[1][0]
-                    var_default = var_remainder[1][1]
-                # get specified type and ignore default arg
-                elif ":" in var_remainder and not "=" in var_remainder:
-                    var_remainder = var_remainder.split(":")
-                    var_name = var_remainder[0]
-                    var_type = var_remainder[1]
-                # get default arg ignore specified type
-                elif "=" in var_remainder and not ":" in var_remainder:
-                    var_remainder = var_remainder.split("=")
-                    var_name = var_remainder[0]
-                    var_default = var_remainder[1]
-                    # print(f"name {var_name} default is {var_default}")
-                # ignore default and type
-                else:
-                    var_name = var_remainder
-                
-                var_name = var_name.strip()
-                var_default = var_default.strip()
-                var_type = var_type.strip()
+            parsed_var_tuple = utilparser.categorise_property(var_remainder)   
+            var_name = parsed_var_tuple[0]
+            var_type = parsed_var_tuple[1]
+            var_default = parsed_var_tuple[2]
 
         output["name"] = var_name
         output["default"] = var_default
@@ -128,7 +116,8 @@ def find_var_data(arg_file_lines):
         # check if start of a property line
         # const, enum, var (with any @ prefix including @onready & @export variances) are valid
         if strline.startswith("const") or strline.startswith("enum")\
-        or strline.startswith("var") or (strline.startswith("@") and "var" in strline):
+        or strline.startswith("var") or (strline.startswith("@") and "var" in strline)\
+        or strline.startswith("signal"):
             if building_var_line:
                 output_var_data()
             building_var_line = True
