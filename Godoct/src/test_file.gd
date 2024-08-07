@@ -142,7 +142,7 @@ func _ready():
 #	if this line is reached (e.g. on encountering a fatal flaw); prefer use of
 #	'error' call rather than this call otherwise.
 ## critical method docstring
-func critical(
+static func critical(
 		arg_caller: Object,
 		arg_error_message,
 		arg_show_on_elevated_only: bool = false) -> void:
