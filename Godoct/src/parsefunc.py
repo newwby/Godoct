@@ -19,7 +19,7 @@ def find_function_data(arg_gdfile):
                 building_func_line = True
             else:
                 # keep track of any documentation above functions
-                if line.startswith("##"):
+                if line.startswith("## "):
                     documentation_line += line
                 else:
                     documentation_line = ""
