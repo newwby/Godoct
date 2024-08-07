@@ -60,22 +60,45 @@ def parse_function_line(arg_function_line):
                 "type": "",
                 "default": "",
                 }
-                arg_split = arg
-                arg_name = arg
-                if ":" in arg:
-                    arg_type = str(arg.split(":")[1]).strip()
-                if "=" in arg_type:
-                    arg_type = arg_type.split("=")[0].strip()
-                categorised_args["type"] = arg_type
-                if "=" in arg:
-                    categorised_args["default"] = str(arg.split("=")[1].strip())
-                if "=" in arg_name:
-                    arg_name = arg_name.split("=")[0].strip()
-                if ":" in arg_name:
-                    arg_name = arg_name.split(":")[0].strip()
+
+                arg_name = ""
+                arg_default = ""
+                arg_type = ""
+
+                 # if inferred type from default arg
+                if ":=" in arg:
+                    arg_split = arg.split(":=")
+                    arg_name = arg_split[0].strip()
+                    arg_default = arg_split[1].strip()
+                    ## TODO add infer type method to lib
+                    # arg_type = infer_type(arg_default)
+                    arg_type = "addmethod!"
+                else:
+                    # get specified type and default arg
+                    if ":" in arg and "=" in arg:
+                        arg_split = arg.split(":")
+                        arg_name = arg_split[0]
+                        arg_split[1] = arg_split[1].split("=")
+                        arg_type = arg_split[1][0]
+                        arg_default = arg_split[1][1]
+                    # get specified type and ignore default arg
+                    elif ":" in arg and not "=" in arg:
+                        arg_split = arg.split(":")
+                        arg_name = arg_split[0]
+                        arg_type = arg_split[1]
+                    # get default arg ignore specified type
+                    elif "=" in arg and not ":" in arg:
+                        arg_split = arg.split("=")
+                        arg_name = arg_split[0]
+                        arg_default = arg_split[1]
+                        # print(f"name {arg_name} default is {arg_default}")
+                    # ignore default and type
+                    else:
+                        arg_name = arg
                 categorised_args["name"] = arg_name.strip()
+                categorised_args["default"] = arg_default.strip()
+                categorised_args["type"] = arg_type.strip()
                 args_parsed.append(categorised_args)
-                    
             
             return args_parsed
     
@@ -89,19 +112,19 @@ def parse_function_line(arg_function_line):
     split_line = arg_function_line
     if "static func " in arg_function_line:
         parsed_entry["prefix"] = "static func"
-        split_line = split_line.split("static func ")[1]
+        split_line = split_line.split("static func ", 1)[1]
     elif "func " in arg_function_line:
         parsed_entry["prefix"] = "func"
-        split_line = split_line.split("func ")[1]
+        split_line = split_line.split("func ", 1)[1]
     else:
         print("ERROR ", arg_function_line)
     
     # get function name
-    parsed_entry["name"] = split_line.split("(")[0]
+    parsed_entry["name"] = split_line.split("(", 1)[0]
     parsed_entry["arguments"] = parse_function_arguments(split_line.split("(")[1].split(")")[0])
     
     # if a return type is specified in the function line, isolate it
     if "->" in split_line:
-        parsed_entry["return"] = split_line.split("->")[1].strip().replace(":", "")
+        parsed_entry["return"] = split_line.split("->", 1)[1].strip().replace(":", "")
     
     return parsed_entry
