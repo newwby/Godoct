@@ -42,14 +42,14 @@ const STARTUP_LOG_FSTRING := "[{device}] Logger service ready @ {time}"
 const LOG_FSTRING := "[t{time}] {caller}\t[{type}] | {message}"
 
 ## record logs documentation
-@export var record_logs := true
+@export var record_logs:bool= true
 
 # user control for how logs are handled; caution - at least one of these flags
 #	must be enabled or else calling log methods won't actually do anything!
 # allow_log_output must be enabled for logs to printed to console/log file (_output_log)
 # allow_log_registration must be enabled for logs to be saved (_store_log)
 var allow_log_output := true
-var allow_log_registration := true
+var allow_log_registration :bool = true
 ## this documentation should never show up!!
 # LOG RECORDING
 # total logs registered this runtime
@@ -57,7 +57,7 @@ var allow_log_registration := true
 ## log call not output documentation
 var total_log_calls := 0
 ## log output documentation
-var total_log_output := 0
+var total_log_output :int = 0
 
 # record of who logged what and when
 # nothing is recorded if record_logs is set to false

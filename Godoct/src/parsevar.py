@@ -2,8 +2,27 @@ import re
 
 ## NOTE that class property and function definitions aren't being picked up because they're indented
 
+def infer_type(arg_string):
+    arg_string = str(arg_string)
+    if "\"" in arg_string:
+        return "string"
+    elif arg_string == "true" or arg_string == "false":
+        return "bool"
+    elif "." in arg_string:
+        return "float"
+    elif "[" in arg_string:
+        return "array"
+    elif "{" in arg_string:
+        return "dictionary"
+    elif str(arg_string).isnumeric:
+        return "int"
+    elif arg_string[1:].isnumeric:
+        return "int"
+    else:
+        return "unknown"
+
 # should be passed an open file content
-def find_var_data(arg_gdfile):
+def find_var_data(arg_file_lines):
     
     # final output for find_var_data
     var_data_output = []
@@ -18,19 +37,84 @@ def find_var_data(arg_gdfile):
         nonlocal doc_line
         nonlocal building_var_line
         building_var_line = False
-        cleaned_var_line = re.sub(r'[ \t]+', ' ', var_line)
-        cleaned_var_line = cleaned_var_line.replace("\n", "")
-        cleaned_doc_line = re.sub(r'[ \t]+', ' ', doc_line)
+        cleaned_var_line = var_line.replace("\n", "")
+        cleaned_var_line = cleaned_var_line.replace("\\", "")
+        cleaned_var_line = re.sub(r'[ \t]+', ' ', cleaned_var_line)
+        var_data = parse_var_line(cleaned_var_line)
+        cleaned_doc_line = doc_line.replace("#", "")
         cleaned_doc_line = cleaned_doc_line.replace("\n", "")
-        var_data_output.append({
-            "data": cleaned_var_line,
-            "doc": cleaned_doc_line
-            })
+        cleaned_doc_line = re.sub(r'[ \t]+', ' ', cleaned_doc_line.strip())
+        var_data["documentation"] = cleaned_doc_line
+        var_data_output.append(var_data)
         var_line = ""
         doc_line = ""
+    
+    def parse_var_line(arg_line):
+        output = {
+            "prefix": "",
+            "name": "",
+            "type": "",
+            "default": "",
+        }
+        var_prefix = ""
+        var_remainder = ""
+        for possible_prefix in ["var", "const", "enum"]:
+            if possible_prefix in arg_line:
+                var_prefix = str(arg_line.split(possible_prefix)[0]+f" {possible_prefix}").strip()
+                var_remainder = arg_line.split(possible_prefix)[1].strip()
+        output["prefix"] = var_prefix
+
+        var_name = ""
+        var_default = ""
+        var_type = ""
+        # if inferred type from default arg
+        if ":=" in var_remainder:
+            var_remainder = var_remainder.split(":=")
+            var_name = var_remainder[0].strip()
+            var_default = var_remainder[1].strip()
+            var_type = infer_type(var_default)
+        else:
+            # get specified type and default arg
+            if ":" in var_remainder and "=" in var_remainder:
+                var_remainder = var_remainder.split(":")
+                var_name = var_remainder[0]
+                var_remainder[1] = var_remainder[1].split("=")
+                var_type = var_remainder[1][0]
+                var_default = var_remainder[1][1]
+            # get specified type and ignore default arg
+            elif ":" in var_remainder and not "=" in var_remainder:
+                var_remainder = var_remainder.split(":")
+                var_name = var_remainder[0]
+                var_type = var_remainder[1]
+            # get default arg ignore specified type
+            elif "=" in var_remainder and not ":" in var_remainder:
+                var_remainder = var_remainder.split("=")
+                var_name = var_remainder[0]
+                var_default = var_remainder[1]
+                # print(f"name {var_name} default is {var_default}")
+            # ignore default and type
+            else:
+                var_name = var_remainder
+            
+            var_name = var_name.strip()
+            var_default = var_default.strip()
+            var_type = var_type.strip()
+
+            # get default arg
+            # if "=" in var_remainder:
+            #     var_remainder = var_remainder.split("=")
+            #     var_name = var_remainder[0].strip()
+            #     var_type = var_remainder[1].strip()
+
+        output["name"] = var_name
+        output["default"] = var_default
+        output["type"] = var_type
+
+
+        return output
 
     # iterate through the file
-    for line in arg_gdfile.readlines():
+    for line in arg_file_lines:
         
         strline = str(line)
 
