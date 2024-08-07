@@ -28,33 +28,104 @@ def parse_gdscript_file(arg_gdscript_file_path):
         "functions": [],
     }
 
-    try:
-        gdfile = open(arg_gdscript_file_path)
-    except:
-        print("file open error")
-        return
-
-    func_line = ""
-    building_func_line = False
-    functions = []
-    for line in gdfile.readlines():
-        if not building_func_line:
-            if line.startswith("func"):
-                func_line = ""
+    def find_functions():
+        try:
+            gdfile = open(arg_gdscript_file_path)
+        except:
+            print("file open error")
+            return
+        func_line = ""
+        building_func_line = False
+        function_line_output = []
+        for line in gdfile.readlines():
+            if not building_func_line:
+                if line.startswith("func") or line.startswith("static func"):
+                    func_line = ""
+                    func_line += line
+                    building_func_line = True
+            else:
                 func_line += line
-                building_func_line = True
-        else:
-            func_line += line
-        if building_func_line and line.strip().endswith(":"):
-            building_func_line = False
-            # re.sub('\s{2,}', ' ', func_line)
-            cleaned_line = re.sub(r'[ \t]+', ' ', func_line)
-            functions.append(cleaned_line.replace("\n", ""))
-            func_line = ""
-    for i in functions:
+            if building_func_line and line.strip().endswith(":"):
+                building_func_line = False
+                # re.sub('\s{2,}', ' ', func_line)
+                cleaned_line = re.sub(r'[ \t]+', ' ', func_line)
+                function_line_output.append(cleaned_line.replace("\n", ""))
+                func_line = ""
+        return function_line_output
+
+    # pass find_functions as argument (an array of strings representing each function line)
+    def parse_functions(arg_function_lines, arg_include_private_functions = False):
+        # submethod to turn a string of function arguments into a dictionary
+        # becomes an entry in the list under parsed_entry["arguments"]
+        def parse_function_arguments(arg_function_arguments_string):
+            if len(str(arg_function_arguments_string)) == 0:
+                return {}
+            else:
+                args_separated = str(arg_function_arguments_string).strip().split(",")
+                args_parsed = []
+                for arg in args_separated:
+                    categorised_args = {
+                    "name": "",
+                    "type": "",
+                    "default": "",
+                    }
+                    arg_split = arg
+                    arg_name = arg
+                    if ":" in arg:
+                       arg_type = str(arg.split(":")[1]).strip()
+                       if "=" in arg_type:
+                           arg_type = arg_type.split("=")[0].strip()
+                       categorised_args["type"] = arg_type
+                    if "=" in arg:
+                        categorised_args["default"] = str(arg.split("=")[1].strip())
+                    if "=" in arg_name:
+                        arg_name = arg_name.split("=")[0].strip()
+                    if ":" in arg_name:
+                        arg_name = arg_name.split(":")[0].strip()
+                    categorised_args["name"] = arg_name.strip()
+                    args_parsed.append(categorised_args)
+                        
+                
+                return args_parsed
+        
+        all_parsed_output = []
+        for line in arg_function_lines:
+            parsed_entry = {
+                "prefix": False,
+                "name": "",
+                "arguments": [],
+                "return": ""
+            }
+            # get if static or non-static function
+            split_line = line
+            if "static func " in line:
+                parsed_entry["prefix"] = "static func"
+                split_line = split_line.split("static func ")[1]
+            elif "func " in line:
+                parsed_entry["prefix"] = "func"
+                split_line = split_line.split("func ")[1]
+            else:
+                print("ERROR ", line)
+            
+            # get function name
+            parsed_entry["name"] = split_line.split("(")[0]
+            parsed_entry["arguments"] = parse_function_arguments(split_line.split("(")[1].split(")")[0])
+            
+            # if a return type is specified in the function line, isolate it
+            if "->" in split_line:
+                parsed_entry["return"] = split_line.split("->")[1].strip().replace(":", "")
+            
+            if arg_include_private_functions or str(parsed_entry["name"]).startswith("_") == False:
+                all_parsed_output.append(parsed_entry)
+        
+        return all_parsed_output
+
+    
+    function_output = parse_functions(find_functions())
+    # for i in function_output:
+    #   # add function documentation by using name
+    for i in function_output:
         print(i)
-    print("I AM PARSER")
-    print("!")
 
 
 if __name__ == "__main__":
