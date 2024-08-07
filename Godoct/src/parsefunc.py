@@ -1,7 +1,7 @@
 import re
 
 # should be passed an open file content
-def find_function_data(arg_gdfile):
+def find_function_data(arg_file_lines):
     # tracking multiline function declarations
     func_line = ""
     building_func_line = False
@@ -9,7 +9,7 @@ def find_function_data(arg_gdfile):
     function_data_output = []
 
     documentation_line = ""
-    for line in arg_gdfile.readlines():
+    for line in arg_file_lines:
         
         # build function declaration line
         if not building_func_line:
@@ -19,7 +19,7 @@ def find_function_data(arg_gdfile):
                 building_func_line = True
             else:
                 # keep track of any documentation above functions
-                if line.startswith("## "):
+                if line.startswith("##"):
                     documentation_line += line
                 else:
                     documentation_line = ""

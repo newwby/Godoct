@@ -88,17 +88,22 @@ def parse_gdscript_file(arg_gdscript_file_path):
         "properties": [],
         "functions": [],
     }
+    file_content = []
     try:
         gdfile = open(arg_gdscript_file_path)
+        file_content = gdfile.readlines()
     except:
         print("file open error")
-        return
+    
+    if len(file_content) > 1:
+        property_output = parsevar.find_var_data(file_content)
+        function_output = parsefunc.find_function_data(file_content)
 
-    property_output = parsevar.find_var_data(gdfile)
-    function_output = parsefunc.find_function_data(gdfile)
-
-    # TESTING ONLY
-    print(property_output)
+    # TESTING ONLY/REMOVE FOR LIVE
+    print("\nPROPERTIES")
+    for i in property_output:
+        print(i)
+    # print("\nMETHODS")
     # for i in function_output:
     #     print(i)
 
