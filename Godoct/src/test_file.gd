@@ -77,6 +77,7 @@ var log_register = {}
 # call _change_permission to modify
 # if an object isn't in log_permissions their permissions default to allowed
 ## multi-line variable declaration test
+## here's the second line for the multi-line variable declaration test
 var log_permissions =\
 		{}
 # where record of last log permission state is kept if storing state when
@@ -179,7 +180,7 @@ func debug_info(arg_caller: Object, arg_error_message) -> void:
 
 
 ## debug ('elevated') logs only appear in the debugger/output/console if the object
-##	emitting the log has had their logging permissions elevated
+## emitting the log has had their logging permissions elevated
 ## use debug/elevated logs to hide logs you only need when debugging
 func debug_warning(arg_caller: Object, arg_error_message) -> void:
 	warning(arg_caller, arg_error_message, true)

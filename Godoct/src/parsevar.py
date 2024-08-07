@@ -9,23 +9,32 @@ def find_var_data(arg_gdfile):
     var_data_output = []
     # tracking multiline property declarations
     var_line = ""
+    doc_line = ""
     building_var_line = False
 
     # when hitting end of a variable declaration
     def output_var_data():
         nonlocal var_line
+        nonlocal doc_line
         nonlocal building_var_line
         building_var_line = False
         cleaned_var_line = re.sub(r'[ \t]+', ' ', var_line)
         cleaned_var_line = cleaned_var_line.replace("\n", "")
+        cleaned_doc_line = re.sub(r'[ \t]+', ' ', doc_line)
+        cleaned_doc_line = cleaned_doc_line.replace("\n", "")
+        var_data_output.append({
+            "data": cleaned_var_line,
+            "doc": cleaned_doc_line
+            })
         var_line = ""
-        var_data_output.append(cleaned_var_line)
+        doc_line = ""
 
     # iterate through the file
     for line in arg_gdfile.readlines():
         
         strline = str(line)
 
+        line_is_documentation = strline.startswith("##")
         line_is_commented_out = strline.startswith("#")
         line_is_blank = len(strline.strip()) == 0
 
@@ -38,11 +47,17 @@ def find_var_data(arg_gdfile):
             building_var_line = True
 
         # stop building property and documentation strings on invalid line
-        if (line_is_blank or line_is_commented_out) and var_line != "":
-            output_var_data()
+        if (line_is_blank or line_is_commented_out):
+            if var_line != "":
+                output_var_data()
+            if doc_line != "" and not line_is_documentation:
+                doc_line = ""
         
         if building_var_line:
             var_line += line
+        
+        if line_is_documentation:
+            doc_line += line
     
     # end
     return var_data_output
