@@ -94,11 +94,13 @@ def parse_gdscript_file(arg_gdscript_file_path):
         print("file open error")
         return
 
-    function_output = parsefunc.find_function_data(gdfile) #parse_functions(find_functions())
+    property_output = parsevar.find_var_data(gdfile)
+    function_output = parsefunc.find_function_data(gdfile)
 
     # TESTING ONLY
-    for i in function_output:
-        print(i)
+    print(property_output)
+    # for i in function_output:
+    #     print(i)
 
 
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())

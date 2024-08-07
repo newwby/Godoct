@@ -50,16 +50,18 @@ const LOG_FSTRING := "[t{time}] {caller}\t[{type}] | {message}"
 # allow_log_registration must be enabled for logs to be saved (_store_log)
 var allow_log_output := true
 var allow_log_registration := true
-
+## this documentation should never show up!!
 # LOG RECORDING
 # total logs registered this runtime
 # (split by whether they were output to console or not)
 ## log call not output documentation
 var total_log_calls := 0
+## log output documentation
 var total_log_output := 0
 
 # record of who logged what and when
 # nothing is recorded if record_logs is set to false
+## documentation for log_register
 var log_register = {}
 
 # LOG PERMISSIONS
@@ -74,9 +76,12 @@ var log_register = {}
 # use to enable or disable log permissions on a per script basis
 # call _change_permission to modify
 # if an object isn't in log_permissions their permissions default to allowed
-var log_permissions = {}
+## multi-line variable declaration test
+var log_permissions =\
+		{}
 # where record of last log permission state is kept if storing state when
 #	changing log permissions
+## documentation for _log_permission_last_state
 var _log_permissions_last_state = {}
 
 ##############################################################################
