@@ -53,6 +53,7 @@ def parse_gdscript_file(file_path):
     parent_class = ''
     class_documentation_started = False
     documentation = []
+    prev_line_empty = False
 
     def process_current_function():
         nonlocal current_function
@@ -97,27 +98,26 @@ def parse_gdscript_file(file_path):
             continue
 
         if stripped_line.startswith('##'):
-            if not class_name and not inside_function and not inside_class:
-                process_class_documentation(stripped_line[2:].strip())
-            elif inside_class and not inside_function and not member_documentation and not current_signal:
-                process_class_documentation(stripped_line[2:].strip())
-            else:
-                if inside_function:
-                    documentation.append(stripped_line[2:].strip())
-                elif current_member:
-                    member_documentation.append(stripped_line[2:].strip())
-                elif current_signal:
-                    signal_documentation.append(stripped_line[2:].strip())
+            if inside_function:
+                # Skip comments if already inside a function
+                continue
+            if prev_line_empty:
+                # Reset documentation if there is an empty line before the current comment
+                documentation.clear()
+                prev_line_empty = False
+            documentation.append(stripped_line[2:].strip())
+            prev_line_empty = False
+
+        elif stripped_line == '':
+            prev_line_empty = True
 
         elif stripped_line.startswith('func '):
             if not first_function_found:
                 first_function_found = True
             if not class_name:
                 class_documentation_started = True
+
             process_current_function()
-            if stripped_line[5] == '_':
-                continue
-            
             func_def = stripped_line[5:]
             func_name_end = func_def.find('(')
             func_name = func_def[:func_name_end].strip()
@@ -154,6 +154,7 @@ def parse_gdscript_file(file_path):
                 "documentation": "",
             }
             inside_function = True
+            prev_line_empty = False
 
         elif stripped_line.startswith(('enum ', 'const ', 'var ')):
             if inside_function or inside_class:
@@ -307,7 +308,9 @@ def generate_markdown(parsed_data):
 # Example usage:
 parsed_data = parse_gdscript_file(TEST_FILE_PATH)
 markdown_output = generate_markdown(parsed_data)
-print(markdown_output)
+for item in parsed_data:
+    print("\n", item, ": ", parsed_data[item])
+# print(markdown_output)
 
 
 
