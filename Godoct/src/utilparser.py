@@ -37,7 +37,7 @@ def categorise_property(arg_property):
         else:
             var_name = arg_property
     
-    return (var_name, var_type, var_default)
+    return (var_name.strip(), var_type.strip(), var_default.strip())
 
 
 def infer_type(arg_string):
