@@ -79,15 +79,6 @@ def get_own_directory():
 }"""
 # with the exception of the 'script_name' property, the values to these keys can be empty (nil strings or empty lists)
 def parse_gdscript_file(arg_gdscript_file_path):
-    output_structure = {
-        "script_name": "",
-        "class_parent": "",
-        "class_name": "",
-        "class_documentation": "",
-        "signals": [],
-        "properties": [],
-        "functions": [],
-    }
     file_content = []
     try:
         gdfile = open(arg_gdscript_file_path)
@@ -96,6 +87,20 @@ def parse_gdscript_file(arg_gdscript_file_path):
         print("file open error")
     
     if len(file_content) > 1:
+        
+        # file detail
+        script_name = ""
+        class_parent = ""
+        class_name = ""
+        class_documentation = ""
+
+        # TODO get script name
+
+        # TODO get class name
+        # TODO get extends
+        
+        # TODO get documentation
+
         output_all_properties = parsevar.find_var_data(file_content)
         output_all_functions = parsefunc.find_function_data(file_content)
 
@@ -137,31 +142,58 @@ def parse_gdscript_file(arg_gdscript_file_path):
                                 else:
                                     all_public_vars.append(property_entry)
 
+        # sort properties into constituent lists
+        all_static_funcs = []
+        all_public_funcs = []
+        all_private_funcs = []
+
+        # properties are organised by the prefix first (variables are further organised by name)
+        for property_entry in output_all_functions:
+            if isinstance(property_entry, dict):
+                if "prefix" in property_entry:
+                    assert(isinstance(property_entry["prefix"], str))
+                    if property_entry["prefix"] == "static func":
+                        all_static_funcs.append(property_entry)
+                    # extra handling for if not static
+                    elif property_entry["prefix"] == "func":
+                        if "name" in property_entry:
+                            assert(isinstance(property_entry["name"], str))
+                            if property_entry["name"].startswith("_"):
+                                all_private_funcs.append(property_entry)
+                            else:
+                                all_public_funcs.append(property_entry)
+
+        output_structure = {
+            "script_name": script_name,
+            "class_parent": class_parent,
+            "class_name": class_name,
+            "class_documentation": class_documentation,
+            "signals": all_signals,
+            "enums": all_enums,
+            "constants": all_consts,
+            "exports": all_export_vars,
+            "onready": all_onready_vars,
+            "public_var": all_public_vars,
+            "private_var": all_private_vars,
+            "static_funcs": all_static_funcs,
+            "public_funcs": all_public_funcs,
+            "private_funcs": all_private_funcs,
+            # "_all_properties": output_all_properties,
+            # "_all_functions": output_all_properties,
+        }
+
         # TESTING ONLY/REMOVE FOR LIVE
-        print("\nSIGNAL PROPERTIES")
-        for i in all_signals:
-            print(i)
-        print("\nENUM PROPERTIES")
-        for i in all_enums:
-            print(i)
-        print("\nCONST PROPERTIES")
-        for i in all_consts:
-            print(i)
-        print("\nEXPORT VAR PROPERTIES")
-        for i in all_export_vars:
-            print(i)
-        print("\nONREADY VAR PROPERTIES")
-        for i in all_onready_vars:
-            print(i)
-        print("\nPUBLIC VAR PROPERTIES")
-        for i in all_public_vars:
-            print(i)
-        print("\nPRIVATE VAR PROPERTIES")
-        for i in all_private_vars:
-            print(i)
-        print("\nMETHODS")
-        for i in output_all_functions:
-            print(i)
+        print(f"\nDEBUGGING OUTPUT FOR SCRIPT @ {arg_gdscript_file_path}")
+        for key in output_structure:
+            value = output_structure[key]
+            if isinstance(value, list):
+                print(f"\noutputting {key}".upper())
+                for i in value:
+                    print(i)
+            else:
+                print(f"{key}: {value}")
+
+        return output_structure
 
 
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
