@@ -1,4 +1,5 @@
 import re
+import utilparser
 
 # should be passed an open file content
 def find_function_data(arg_file_lines):
@@ -74,27 +75,11 @@ def parse_function_line(arg_function_line):
                     # arg_type = infer_type(arg_default)
                     arg_type = "addmethod!"
                 else:
-                    # get specified type and default arg
-                    if ":" in arg and "=" in arg:
-                        arg_split = arg.split(":")
-                        arg_name = arg_split[0]
-                        arg_split[1] = arg_split[1].split("=")
-                        arg_type = arg_split[1][0]
-                        arg_default = arg_split[1][1]
-                    # get specified type and ignore default arg
-                    elif ":" in arg and not "=" in arg:
-                        arg_split = arg.split(":")
-                        arg_name = arg_split[0]
-                        arg_type = arg_split[1]
-                    # get default arg ignore specified type
-                    elif "=" in arg and not ":" in arg:
-                        arg_split = arg.split("=")
-                        arg_name = arg_split[0]
-                        arg_default = arg_split[1]
-                        # print(f"name {arg_name} default is {arg_default}")
-                    # ignore default and type
-                    else:
-                        arg_name = arg
+                    parsed_var_tuple = utilparser.categorise_property(arg)   
+                    arg_name = parsed_var_tuple[0]
+                    arg_type = parsed_var_tuple[1]
+                    arg_default = parsed_var_tuple[2]
+                    
                 categorised_args["name"] = arg_name.strip()
                 categorised_args["default"] = arg_default.strip()
                 categorised_args["type"] = arg_type.strip()
