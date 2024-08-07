@@ -67,50 +67,53 @@ def find_var_data(arg_file_lines):
         var_name = ""
         var_default = ""
         var_type = ""
-        # if inferred type from default arg
-        if ":=" in var_remainder:
-            var_remainder = var_remainder.split(":=")
+
+        # enums get different handling
+        if "enum" in var_prefix:
+            var_remainder = var_remainder.split("{")
+            str(var_remainder[1].replace("}", ""))
             var_name = var_remainder[0].strip()
             var_default = var_remainder[1].strip()
-            var_type = infer_type(var_default)
-        else:
-            # get specified type and default arg
-            if ":" in var_remainder and "=" in var_remainder:
-                var_remainder = var_remainder.split(":")
-                var_name = var_remainder[0]
-                var_remainder[1] = var_remainder[1].split("=")
-                var_type = var_remainder[1][0]
-                var_default = var_remainder[1][1]
-            # get specified type and ignore default arg
-            elif ":" in var_remainder and not "=" in var_remainder:
-                var_remainder = var_remainder.split(":")
-                var_name = var_remainder[0]
-                var_type = var_remainder[1]
-            # get default arg ignore specified type
-            elif "=" in var_remainder and not ":" in var_remainder:
-                var_remainder = var_remainder.split("=")
-                var_name = var_remainder[0]
-                var_default = var_remainder[1]
-                # print(f"name {var_name} default is {var_default}")
-            # ignore default and type
-            else:
-                var_name = var_remainder
-            
-            var_name = var_name.strip()
-            var_default = var_default.strip()
-            var_type = var_type.strip()
+            var_type = "enum"
 
-            # get default arg
-            # if "=" in var_remainder:
-            #     var_remainder = var_remainder.split("=")
-            #     var_name = var_remainder[0].strip()
-            #     var_type = var_remainder[1].strip()
+        # var and const parsing
+        else:
+            # if inferred type from default arg
+            if ":=" in var_remainder:
+                var_remainder = var_remainder.split(":=")
+                var_name = var_remainder[0].strip()
+                var_default = var_remainder[1].strip()
+                var_type = infer_type(var_default)
+            else:
+                # get specified type and default arg
+                if ":" in var_remainder and "=" in var_remainder:
+                    var_remainder = var_remainder.split(":")
+                    var_name = var_remainder[0]
+                    var_remainder[1] = var_remainder[1].split("=")
+                    var_type = var_remainder[1][0]
+                    var_default = var_remainder[1][1]
+                # get specified type and ignore default arg
+                elif ":" in var_remainder and not "=" in var_remainder:
+                    var_remainder = var_remainder.split(":")
+                    var_name = var_remainder[0]
+                    var_type = var_remainder[1]
+                # get default arg ignore specified type
+                elif "=" in var_remainder and not ":" in var_remainder:
+                    var_remainder = var_remainder.split("=")
+                    var_name = var_remainder[0]
+                    var_default = var_remainder[1]
+                    # print(f"name {var_name} default is {var_default}")
+                # ignore default and type
+                else:
+                    var_name = var_remainder
+                
+                var_name = var_name.strip()
+                var_default = var_default.strip()
+                var_type = var_type.strip()
 
         output["name"] = var_name
         output["default"] = var_default
         output["type"] = var_type
-
-
         return output
 
     # iterate through the file
