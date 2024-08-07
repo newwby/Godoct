@@ -40,21 +40,40 @@ def parse_gdscript_file(arg_gdscript_file_path):
         # final output
         function_data_output = []
 
+        documentation_line = ""
         for line in gdfile.readlines():
+            
+            # build function declaration line
             if not building_func_line:
                 if line.startswith("func") or line.startswith("static func"):
                     func_line = ""
                     func_line += line
                     building_func_line = True
+                else:
+                    # keep track of any documentation above functions
+                    if line.startswith("##"):
+                        documentation_line += line
+                    else:
+                        documentation_line = ""
             else:
                 func_line += line
+            
+            # end building when hitting the :
             if building_func_line and line.strip().endswith(":"):
                 building_func_line = False
-                # re.sub('\s{2,}', ' ', func_line)
+                # clean the line and parse it into a dict
                 cleaned_line = re.sub(r'[ \t]+', ' ', func_line)
                 function_line_as_dict = parse_function_line(cleaned_line.replace("\n", ""))
+                # store the documentation lines above the function
+                clean_documentation = documentation_line.replace("#", "").replace("\n", " ").strip()
+                clean_documentation = re.sub(r'[ \t]+', ' ', clean_documentation)
+                # add docs to the dict
+                function_line_as_dict["documentation"] = clean_documentation
+                # output
                 function_data_output.append(function_line_as_dict)
+                # reset
                 func_line = ""
+                documentation_line = ""
         return function_data_output
 
     # pass find_functions as argument (an array of strings representing each function line)
@@ -118,15 +137,6 @@ def parse_gdscript_file(arg_gdscript_file_path):
             parsed_entry["return"] = split_line.split("->")[1].strip().replace(":", "")
         
         return parsed_entry
-    
-    # pass find_functions as argument (an array of strings representing each function line)
-    def parse_function_documentation(arg_function_lines, arg_include_private_functions = False):
-        documentation_line = ""
-        for line in gdfile.readlines():
-            if line.startswith("##"):
-                documentation_line += line
-            else:
-                documentation_line = ""
     
     function_output = find_function_data() #parse_functions(find_functions())
     # for i in function_output:

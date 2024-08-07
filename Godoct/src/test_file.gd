@@ -141,7 +141,9 @@ func _ready():
 # Critical should only be called where you need the program to stop execution
 #	if this line is reached (e.g. on encountering a fatal flaw); prefer use of
 #	'error' call rather than this call otherwise.
-## critical method docstring
+## critical method docstring, 
+## multi-line documentation filtering test
+## this should be three lines into one
 static func critical(
 		arg_caller: Object,
 		arg_error_message,
