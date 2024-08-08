@@ -18,9 +18,11 @@ structured_input_format = [
     ]
 
 # should be passed the file path to create the doc file and the output of get_doc_text
+# overwrites the doc
 def create_doc(arg_path, arg_doc_text):
-
-    return
+    f = open(arg_path, "w")
+    f.write(arg_doc_text)
+    f.close()
 
 
 # should be passed the structured output of parse_and_sort_gdscript
@@ -31,9 +33,12 @@ def get_doc_text(arg_parser_output: dict):
         print("invalid argument for get_doc_text")
         return
     assert(verify_doc_text_input(arg_parser_output) == True)
-    print(_doc_text_header(arg_parser_output))
-    print("\n\n")
-    print(_doc_text_properties(arg_parser_output))
+    text_header = _doc_text_header(arg_parser_output)
+    sep = "\n\n"
+    properties = _doc_text_properties(arg_parser_output)
+    
+    doc_text_output = f"{text_header}{sep}{properties}"
+    return doc_text_output
     
 
 

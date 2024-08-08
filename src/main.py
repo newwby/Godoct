@@ -258,4 +258,11 @@ valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_
 # for path in get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
 #   generate_markdown(parse_and_sort_gdscript(path))
 parse_and_sort_gdscript(TEST_FILE_PATH)
-generator_md.get_doc_text(parse_and_sort_gdscript(TEST_FILE_PATH))
+
+docs_directory_path = f"{get_own_directory()}\\{GODOCT_DOCS_DIRECTORY}"
+if os.path.exists(docs_directory_path) == False:
+    os.mkdir(docs_directory_path)
+
+doc_file_path = f"{docs_directory_path}\\{os.path.basename(TEST_FILE_PATH)}".replace(".gd", ".md")
+doc_file_text = generator_md.get_doc_text(parse_and_sort_gdscript(TEST_FILE_PATH))
+generator_md.create_doc(doc_file_path, doc_file_text)
