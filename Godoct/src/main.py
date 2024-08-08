@@ -3,11 +3,37 @@ import re
 import parsefunc
 import parsevar
 
-GODOCT_DOCS_DIRECTORY = "docs"
-GODOCT_INCLUDE_FILE_NAME = "godoct_include.txt"
-#TODO REMOVE LATER
+# TODO create different mains for generating markdown versus generating rst
+#   (move the validating logic to separate pyfile)
+#   (move the parsing/sorting logic to separate pyfile)
+
+# TODO write docs/walkthrough on how to write docs for GDscript files to pick up
+#   specify about using ## documentation lines
+#   specify how documentation lines must precede properties/functions
+#   specify about class docstring and how to use empty lines
+#   give examples
+#   specify how the include file works
+
+# TODO add docstrings for sphinx/rtd to pick up
+#   write readme/landing page about Godoct for Github and another for RTD index
+
+####################################
+
+# TODO move to separate constants file
+
+#TODO REMOVE LATER WHEN ADDING PROPER TESTING
 TEST_FILE_PATH = "C:\\Users\\Daniel\\PycharmProjects\\Godoct\\Godoct\\src\\test_file.gd"
 
+GODOCT_INCLUDE_FILE_NAME = "godoct_include.txt"
+# move to consts
+GODOCT_DOCS_DIRECTORY = "docs"
+
+# class documentation always has to start with a line with this tag
+DOC_START_TAG = "## <class_doc>"
+# a paragraph break (two line breaks) can be added to documentation by adding a line that has no other characters except for this
+DOC_EMPTY_LINE = "##"
+
+####################################
 
 # finds all .gd files within the same directory
 def get_all_gdscript_paths():
@@ -101,10 +127,6 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
         
         collecting_documentation = False
         class_docstring = ""
-        # class documentation always has to start with a line with this tag
-        class_documentation_start_tag = "## <class_doc>"
-        # a paragraph break (two line breaks) can be added to documentation by adding a line that has no other characters except for this
-        class_documentation_empty_line = "##"
 
         # collect script information by iterating through the file
         for line in file_content:
@@ -119,7 +141,7 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
                 # collect all consecutive lines that are valid documentation lines
                 if line.startswith("##"):
                     class_docstring += line.replace("\n", "").replace("##", "").strip()+" "
-                    if line.strip() == class_documentation_empty_line:
+                    if line.strip() == DOC_EMPTY_LINE:
                         class_docstring += "\n\n"
                 # if invalid line, store the documentation
                 else:
@@ -127,7 +149,7 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
                     class_documentation = class_docstring
                     class_docstring = ""
             # class documentation must start with a line with the start tag
-            if line.startswith(class_documentation_start_tag):
+            if line.startswith(DOC_START_TAG):
                 collecting_documentation = True
         
         # collect and collate property and function information
