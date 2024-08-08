@@ -27,9 +27,11 @@ def create_doc(arg_path, arg_doc_text):
 # will return a github markdown text
 # does not create a file
 def get_doc_text(arg_structured_gdscript_output: dict):
-    print("\nverifying")
+    # print("\nverifying")
     assert(verify_doc_text_input(arg_structured_gdscript_output) == True)
-    print("verified!")
+    # print("verified!")
+    pass
+    
 
 
 # should be passed the output of parse_and_sort_gdscript
