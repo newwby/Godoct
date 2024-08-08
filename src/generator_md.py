@@ -30,17 +30,10 @@ def get_doc_text(arg_parser_output: dict):
     if arg_parser_output is None:
         print("invalid argument for get_doc_text")
         return
-    # print("\nverifying")
     assert(verify_doc_text_input(arg_parser_output) == True)
-    # print("verified!")
-    pass
-    print("start header")
     print(_doc_text_header(arg_parser_output))
-    print("end header")
     print("\n\n")
-    print("start property read")
     print(_doc_text_properties(arg_parser_output))
-    print("end property read")
     
 
 
@@ -131,7 +124,6 @@ def _generate_property_subsection(arg_parser_property_subsection: list, arg_subs
         full_table_output += table_line
 
         # build detailed entry
-        print(f"0 1 2 3 {property_name} {property_type}")
         full_entry_output += f"### {property_name}"
         if len(property_type) > 0:
             full_entry_output += f"\n- **type:** {str(property_type).lower()}\n"
@@ -139,11 +131,6 @@ def _generate_property_subsection(arg_parser_property_subsection: list, arg_subs
             full_entry_output += f"\n- *[default value = {str(property_default).lower()}]*\n"
         if len(property_docstring) > 0:
             full_entry_output += f"\n{property_docstring}\n"
-        
-    #     detailed_entry_body = "### {property_name}\n{property_docstring}\n\"
-    #     detailed_entry_body += "\n"
-
-    #     full_entry_output += detailed_entry_body
         
     output_body = table_header+full_table_output+"\n"+full_entry_output
     subsection_name = arg_subsection_name.upper()
