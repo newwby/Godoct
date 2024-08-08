@@ -251,7 +251,7 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
                 else:
                     print(f"{key}: {value}")
 
-            return output_structure
+        return output_structure
 
 # is __main__
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
