@@ -87,9 +87,9 @@ def find_var_data(arg_file_lines):
         # enums get different handling
         if "enum" in var_prefix:
             var_remainder = var_remainder.split("{")
-            str(var_remainder[1].replace("}", ""))
             var_name = var_remainder[0].strip()
             var_default = var_remainder[1].strip()
+            var_default = var_default.strip().replace("}", "")
             var_type = "enum"
 
         # var and const parsing
