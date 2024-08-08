@@ -4,6 +4,16 @@ extends Node
 
 ##############################################################################
 
+## THIS LINE SHOULD NOT APPEAR IN DOCUMENTATION
+
+## <class_doc>
+## this is the test documentation for the test file
+## this line should be included in the test docs
+##
+## (another valid line for the test docs)
+
+## this line should not be included in the test docs
+
 #//TODO implement asynchronous logging (send to buffer, log over time)
 #	- some concern with output order for critical logs
 #		(what if they are sent after the fatal error and never seen?)

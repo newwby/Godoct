@@ -48,6 +48,7 @@ def get_included_file_names():
 
 # make sure to pass include as first
 def get_matched_gdscripts(arg_allowed_file_names, arg_file_paths):
+    # debug prints
     # print(f"\ntest print list 1 = {arg_allowed_file_names}")
     # print(f"\ntest print list 2 = {arg_file_paths}")
     output = []
@@ -78,7 +79,7 @@ def get_own_directory():
     "functions": a list of nested dictionaries where each dictionary details a function in the script,
 }"""
 # with the exception of the 'script_name' property, the values to these keys can be empty (nil strings or empty lists)
-def parse_gdscript_file(arg_gdscript_file_path):
+def parse_and_sort_gdscript(arg_gdscript_file_path):
     file_content = []
     try:
         gdfile = open(arg_gdscript_file_path)
@@ -90,17 +91,46 @@ def parse_gdscript_file(arg_gdscript_file_path):
         
         # file detail
         script_name = ""
+        is_tool_script = False
         class_parent = ""
         class_name = ""
         class_documentation = ""
 
-        # TODO get script name
-
-        # TODO get class name
-        # TODO get extends
+        # get basic script detail
+        script_name = os.path.basename(arg_gdscript_file_path)
         
-        # TODO get documentation
+        collecting_documentation = False
+        class_docstring = ""
+        # class documentation always has to start with a line with this tag
+        class_documentation_start_tag = "## <class_doc>"
+        # a paragraph break (two line breaks) can be added to documentation by adding a line that has no other characters except for this
+        class_documentation_empty_line = "##"
 
+        # collect script information by iterating through the file
+        for line in file_content:
+            if line.strip().startswith("@tool"):
+                is_tool_script = True
+            if line.strip().startswith("extends"):
+                class_parent = line.split("extends")[1].strip()
+            if line.strip().startswith("class_name"):
+                class_name = line.split("class_name")[1].strip()
+            
+            if collecting_documentation:
+                # collect all consecutive lines that are valid documentation lines
+                if line.startswith("##"):
+                    class_docstring += line.replace("\n", "").replace("##", "").strip()+" "
+                    if line.strip() == class_documentation_empty_line:
+                        class_docstring += "\n\n"
+                # if invalid line, store the documentation
+                else:
+                    collecting_documentation = False
+                    class_documentation = class_docstring
+                    class_docstring = ""
+            # class documentation must start with a line with the start tag
+            if line.startswith(class_documentation_start_tag):
+                collecting_documentation = True
+        
+        # collect and collate property and function information
         output_all_properties = parsevar.find_var_data(file_content)
         output_all_functions = parsefunc.find_function_data(file_content)
 
@@ -165,6 +195,7 @@ def parse_gdscript_file(arg_gdscript_file_path):
 
         output_structure = {
             "script_name": script_name,
+            "is_tool": is_tool_script,
             "class_parent": class_parent,
             "class_name": class_name,
             "class_documentation": class_documentation,
@@ -183,18 +214,22 @@ def parse_gdscript_file(arg_gdscript_file_path):
         }
 
         # TESTING ONLY/REMOVE FOR LIVE
-        print(f"\nDEBUGGING OUTPUT FOR SCRIPT @ {arg_gdscript_file_path}")
-        for key in output_structure:
-            value = output_structure[key]
-            if isinstance(value, list):
-                print(f"\noutputting {key}".upper())
-                for i in value:
-                    print(i)
-            else:
-                print(f"{key}: {value}")
+        debug_print_output_structure = True
+        if debug_print_output_structure:
+            print(f"\nDEBUGGING OUTPUT FOR SCRIPT @ {arg_gdscript_file_path}")
+            for key in output_structure:
+                value = output_structure[key]
+                if isinstance(value, list):
+                    print(f"\noutputting {key}".upper())
+                    for i in value:
+                        print(i)
+                else:
+                    print(f"{key}: {value}")
 
-        return output_structure
+            return output_structure
 
-
+# is __main__
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
-parse_gdscript_file(TEST_FILE_PATH)
+# for path in get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
+#   generate_markdown(parse_and_sort_gdscript(path))
+parse_and_sort_gdscript(TEST_FILE_PATH)
