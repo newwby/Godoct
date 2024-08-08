@@ -90,7 +90,7 @@ def _doc_text_header(arg_parser_output: dict):
 # should be passed validated (see verify_doc_text_input) output from parse_and_sort_gdscript
 # generates all the property bodies
 def _doc_text_properties(arg_parser_output: dict):
-    doctext = ""
+    doctext = "# Properties\n\n"
     # (_generate_property_subsection(arg_parser_output["signals"])) # signals needs special handling it has different keys
     doctext += (_generate_property_subsection(arg_parser_output["enums"], "enums"))
     doctext += (_generate_property_subsection(arg_parser_output["constants"], "constants"))
@@ -105,20 +105,50 @@ def _doc_text_properties(arg_parser_output: dict):
 # from a property nested list (output from parse_and_sort gdscript) generates docs for properties within
 def _generate_property_subsection(arg_parser_property_subsection: list, arg_subsection_name: str):
     # print("reading ", arg_parser_property_subsection)
-    output_body = ""
+    table_header = "| Property Name | Property Type | Propery Default Value |\n| --- | :---: | ---: |\n"
+    full_table_output = ""
+    full_entry_output = ""
+
+    if len(arg_parser_property_subsection) == 0:
+        return ""
+
     for propdata in arg_parser_property_subsection:
         # validate entry
         assert(isinstance(propdata, dict))
         required_keys = ["prefix", "name", "type", "default", "documentation"]
         for key in required_keys:
             assert key in propdata.keys()
-        prefix = propdata["prefix"]
-        name = propdata["name"]
-        type = propdata["type"]
-        default = propdata["default"]
-        documentation = propdata["documentation"]
-        # print(prefix, name, type, default, documentation)
-        output_body += f"{prefix} {name}: {type} = {default}\n-- {documentation}\n"
-    
-    return f"# {arg_subsection_name.upper()}\n{output_body}\n\n"
+        
+        # assign entry values
+        # prefix = propdata["prefix"]
+        property_name = propdata["name"]
+        property_type = propdata["type"]
+        property_default = propdata["default"]
+        property_docstring = propdata["documentation"]
+        
+        # build table
+        table_line = f"| **{property_name}** | *{property_type}* | {property_default} |\n"
+        full_table_output += table_line
+
+        # build detailed entry
+        print(f"0 1 2 3 {property_name} {property_type}")
+        full_entry_output += f"### {property_name}"
+        if len(property_type) > 0:
+            full_entry_output += f"\n- **type:** {str(property_type).lower()}\n"
+        if len(property_default) > 0:
+            full_entry_output += f"\n- *[default value = {str(property_default).lower()}]*\n"
+        if len(property_docstring) > 0:
+            full_entry_output += f"\n{property_docstring}\n"
+        
+    #     detailed_entry_body = "### {property_name}\n{property_docstring}\n\"
+    #     detailed_entry_body += "\n"
+
+    #     full_entry_output += detailed_entry_body
+        
+    output_body = table_header+full_table_output+"\n"+full_entry_output
+    subsection_name = arg_subsection_name.upper()
+    if subsection_name.endswith("S") == False:
+        subsection_name += "S"
+
+    return f"\n---\n## {subsection_name}\n{output_body}\n\n"
 
