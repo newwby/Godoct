@@ -24,7 +24,8 @@ import generator_md
 # TODO move to separate constants file
 
 #TODO REMOVE LATER WHEN ADDING PROPER TESTING
-TEST_FILE_PATH = "C:\\Users\\Daniel\\PycharmProjects\\Godoct\\Godoct\\src\\test_file.gd"
+# absolute path
+TEST_FILE_PATH = "C:\\Users\\Daniel\\PycharmProjects\\Godoct\\src\\test_file.gd"
 
 GODOCT_INCLUDE_FILE_NAME = "godoct_include.txt"
 # move to consts
