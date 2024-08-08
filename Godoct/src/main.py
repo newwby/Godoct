@@ -1,7 +1,9 @@
 import os
-import re
 import parsefunc
 import parsevar
+import generator_md
+
+# TODO add more type hinting in func arguments and statically type func return values
 
 # TODO create different mains for generating markdown versus generating rst
 #   (move the validating logic to separate pyfile)
@@ -255,3 +257,4 @@ valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_
 # for path in get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
 #   generate_markdown(parse_and_sort_gdscript(path))
 parse_and_sort_gdscript(TEST_FILE_PATH)
+generator_md.get_doc_text(parse_and_sort_gdscript(TEST_FILE_PATH))
