@@ -37,6 +37,10 @@ def get_doc_text(arg_parser_output: dict):
     print("start header")
     print(_doc_text_header(arg_parser_output))
     print("end header")
+    print("\n\n")
+    print("start property read")
+    print(_doc_text_properties(arg_parser_output))
+    print("end property read")
     
 
 
@@ -55,9 +59,12 @@ def verify_doc_text_input(arg_parser_output: dict) -> bool:
             is_valid = False
     return is_valid
 
+
 ######################################################################
 
+
 # should be passed validated (see verify_doc_text_input) output from parse_and_sort_gdscript
+# generates the documentation header
 def _doc_text_header(arg_parser_output: dict):
     # doc name is the class name, if specified, otherwise the basename for the script path minus the extnesion
     doc_name = ""
@@ -78,4 +85,40 @@ def _doc_text_header(arg_parser_output: dict):
         \n{documentation}\n"
     
     return output_string
+
+
+# should be passed validated (see verify_doc_text_input) output from parse_and_sort_gdscript
+# generates all the property bodies
+def _doc_text_properties(arg_parser_output: dict):
+    doctext = ""
+    # (_generate_property_subsection(arg_parser_output["signals"])) # signals needs special handling it has different keys
+    doctext += (_generate_property_subsection(arg_parser_output["enums"], "enums"))
+    doctext += (_generate_property_subsection(arg_parser_output["constants"], "constants"))
+    doctext += (_generate_property_subsection(arg_parser_output["exports"], "export var"))
+    doctext += (_generate_property_subsection(arg_parser_output["onready"], "onready var"))
+    doctext += (_generate_property_subsection(arg_parser_output["public_var"], "public var"))
+    doctext += (_generate_property_subsection(arg_parser_output["private_var"], "private var"))
+    
+    return doctext
+
+
+# from a property nested list (output from parse_and_sort gdscript) generates docs for properties within
+def _generate_property_subsection(arg_parser_property_subsection: list, arg_subsection_name: str):
+    # print("reading ", arg_parser_property_subsection)
+    output_body = ""
+    for propdata in arg_parser_property_subsection:
+        # validate entry
+        assert(isinstance(propdata, dict))
+        required_keys = ["prefix", "name", "type", "default", "documentation"]
+        for key in required_keys:
+            assert key in propdata.keys()
+        prefix = propdata["prefix"]
+        name = propdata["name"]
+        type = propdata["type"]
+        default = propdata["default"]
+        documentation = propdata["documentation"]
+        # print(prefix, name, type, default, documentation)
+        output_body += f"{prefix} {name}: {type} = {default}\n-- {documentation}\n"
+    
+    return f"# {arg_subsection_name.upper()}\n{output_body}\n\n"
 
