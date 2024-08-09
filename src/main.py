@@ -3,11 +3,27 @@ import parsers.parsefunc as parsef
 import parsers.parsevar as parsev
 import generators.generator_md as gen_md
 
+## TODO create api index page on doc generation
+## TODO add landing page on running (with /help --h functions, and ignore include (generate all in target directory recursively) flag)
+## TODO add startup arguments that can execute with landing page args
+## TODO potentially investigate walking through the .gd files
+
+## TODO convert all TODO notes to repo issues
+
 # TODO add more type hinting in func arguments and statically type func return values
 
 # TODO create different mains for generating markdown versus generating rst
 #   (move the validating logic to separate pyfile)
 #   (move the parsing/sorting logic to separate pyfile)
+
+## TODO add fstring consts in generation file so can use the same data fetching script and just apply to different fstrings for md vs rst
+
+## TODO pytest setup, tests for
+# - various ways to write args/funcs/vars
+# - comments in weird places
+# - multiline func/var declarations
+# - multiline arguments
+# - different combinations of static typing, default args, neither/either
 
 # TODO write docs/walkthrough on how to write docs for GDscript files to pick up
 #   specify about using ## documentation lines
@@ -22,6 +38,8 @@ import generators.generator_md as gen_md
 ####################################
 
 # TODO move to separate constants file
+
+GODOCT_VERSION = "0.1.0"
 
 #TODO REMOVE LATER WHEN ADDING PROPER TESTING
 # absolute path
@@ -39,15 +57,20 @@ DOC_EMPTY_LINE = "##"
 ####################################
 
 # finds all .gd files within the same directory
-def get_all_gdscript_paths():
+def get_all_gdscript_paths(arg_override_path: str = "") -> list:
     from os import walk
 
-    dir_path = get_own_directory()
+    dir_path = ""
+    if os.path.exists(arg_override_path):
+        dir_path = arg_override_path
+    else:
+        dir_path = get_own_directory()
+    
     try:
         assert(isinstance(dir_path, str)) == True
     except:
         print("invalid path")
-        return ""
+        return []
 
     # list to store full file path
     all_file_paths = []
@@ -255,14 +278,31 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
 
 # is __main__
 
-# not doing anything right now
-valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
+print(f"Godoct v{GODOCT_VERSION}, by Daniel Newby. Licensed under MIT license.\n")
+all_gdscript_paths_found = []
+root_directory_path = input("\nSpecify root directory to generate docs for: \n")
+use_root = False
 
-docs_directory_path = f"{get_own_directory()}\\{GODOCT_DOCS_DIRECTORY}"
-if os.path.exists(docs_directory_path) == False:
-    os.mkdir(docs_directory_path)
+if os.path.exists(root_directory_path) == False:
+    is_y = input("\nInvalid path - type Y or Yes to generate docs for this directory, or anything else to exit.\n")
+    if is_y.lower() in ["y", "yes"]:
+        root_directory_path = get_own_directory()
+        all_gdscript_paths_found = get_all_gdscript_paths()
+else:
+    all_gdscript_paths_found = get_all_gdscript_paths(root_directory_path)
 
-for path in valid_paths:
-    doc_file_path = f"{docs_directory_path}\\{os.path.basename(path)}".replace(".gd", ".md")
-    doc_file_text = gen_md.get_doc_text(parse_and_sort_gdscript(path))
-    gen_md.create_doc(doc_file_path, doc_file_text)
+if all_gdscript_paths_found == None or all_gdscript_paths_found == []:
+    exit
+# dostuff
+else:
+    valid_paths = get_matched_gdscripts(get_included_file_names(), all_gdscript_paths_found)
+
+    docs_directory_path = f"{root_directory_path}\\{GODOCT_DOCS_DIRECTORY}"
+    if os.path.exists(docs_directory_path) == False:
+        os.mkdir(docs_directory_path)
+
+    for path in valid_paths:
+        doc_file_path = f"{docs_directory_path}\\{os.path.basename(path)}".replace(".gd", ".md")
+        doc_file_text = gen_md.get_doc_text(parse_and_sort_gdscript(path))
+        gen_md.create_doc(doc_file_path, doc_file_text)
+        print(f"doc created at {doc_file_path}")

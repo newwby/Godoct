@@ -3,3 +3,7 @@ test_file2.gd
 test_file3.gd
 test_file4.gd
 test_file5.gd
+global_log.gd
+data_utilities.gd
+node_utilities.gd
+sort_utilities.gd
