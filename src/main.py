@@ -239,7 +239,7 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
         }
 
         # TESTING ONLY/REMOVE FOR LIVE
-        debug_print_output_structure = True
+        debug_print_output_structure = False
         if debug_print_output_structure:
             print(f"\nDEBUGGING OUTPUT FOR SCRIPT @ {arg_gdscript_file_path}")
             for key in output_structure:

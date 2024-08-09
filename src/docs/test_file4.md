@@ -5,20 +5,26 @@
 
 
 
+---
+# Functions
+
+| | Function Name | Function Arguments | Function Return Value |
+| --- | :--- | :--- | ---: |
+| static | **[sort_ascending](#void-sort_ascending)** | arg_a<br>arg_b<br> | void
+| static | **[sort_descending](#void-sort_descending)** | arg_a<br>arg_b<br> | void
 
 
-
-
-
+---
+# Functions
 
 
 ---
 ## STATIC FUNCS
-### (void) static func sort_ascending
+### (void) sort_ascending
 - **arg_a**
 - **arg_b**
 
-### (void) static func sort_descending
+### (void) sort_descending
 - **arg_a**
 - **arg_b**
 

@@ -40,10 +40,12 @@ def get_doc_text(arg_parser_output: dict):
     assert(_verify_doc_text_input(arg_parser_output) == True)
     text_header = _doc_text_header(arg_parser_output)
     sep = "\n\n"
-    properties = _doc_text_properties(arg_parser_output)
-    functions = _doc_text_functions(arg_parser_output)
+    properties_table = _doc_text_properties_table(arg_parser_output)
+    properties_detailed = _doc_text_properties_detailed(arg_parser_output)
+    functions_table = _doc_text_functions_table(arg_parser_output)
+    functions_detailed = _doc_text_functions_detailed(arg_parser_output)
     
-    doc_text_output = f"{text_header}{sep}{properties}{functions}{CREDIT_LINK}"
+    doc_text_output = f"{text_header}{sep}{properties_table}{functions_table}{properties_detailed}{functions_detailed}{CREDIT_LINK}"
     return doc_text_output
 
 
@@ -68,27 +70,43 @@ def _build_argstr(arg_argument_entry: dict) -> str:
     return output_string
 
 
-# should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
-# generates the function table, and all the function detailed entry bodies
-def _doc_text_functions(arg_parser_output: dict) -> str:
+# gets the basic table information for functions
+def _doc_text_functions_table(arg_parser_output: dict) -> str:
     doctext = ""
     func_header = "---\n# Functions\n"
     
-    base_func_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
+    base_func_table_text = "| | Function Name | Function Arguments | Function Return Value |\n| --- | :--- | :--- | ---: |\n"
     func_table_text = base_func_table_text
+
+    for subsect_key in FUNCTION_SUBSECTION_KEYS:
+        if len(arg_parser_output[subsect_key]) > 0:
+            func_table_text += _generate_function_table_row(arg_parser_output[subsect_key], subsect_key)
+    
+    # if the script is empty don't declare the table header
+    if func_table_text == base_func_table_text:
+        return ""
+    else:
+        doctext = f"\n{func_header}\n{func_table_text}\n"
+        return doctext
+
+
+# gets the detailed information for functions
+def _doc_text_functions_detailed(arg_parser_output: dict) -> str:
+    doctext = ""
+    func_header = "---\n# Functions\n"
+    
     func_entries_text = ""
 
     for subsect_key in FUNCTION_SUBSECTION_KEYS:
         if len(arg_parser_output[subsect_key]) > 0:
-            func_table_text += _generate_function_table_row(arg_parser_output[subsect_key])
             func_entries_text += _generate_function_subsection(arg_parser_output[subsect_key], subsect_key)
     
-    # if the script is empty don't declare the table header
-    if func_table_text == base_func_table_text:
-        func_header = ""
-        func_table_text = ""
-    
-    doctext = f"\n{func_header}\n{func_table_text}\n{func_entries_text}"
+    # if the script is empty don't send the func header
+    if func_entries_text == func_header:
+        return ""
+    else:
+        doctext = f"\n{func_header}\n{func_entries_text}"
+        return doctext
     
     return doctext
 
@@ -120,7 +138,36 @@ def _doc_text_header(arg_parser_output: dict) -> str:
 
 # should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
 # generates the variable and signal tables, and all the variable and signal detailed entry bodies
-def _doc_text_properties(arg_parser_output: dict) -> str:
+def _doc_text_properties_detailed(arg_parser_output: dict) -> str:
+    doctext = ""
+    signal_header = ""
+    property_header = "---\n# Properties\n"
+    
+    all_property_entry_text = ""
+
+    if len(arg_parser_output["signals"]) > 0:
+        signal_header = "---\n# Signals\n"
+        all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
+    
+    doctext += "\n# Properties\n\n"
+
+    at_least_one_property = False
+    for subsect_key in PROPERTY_SUBSECTION_KEYS:
+        if len(arg_parser_output[subsect_key]) > 0:
+            at_least_one_property = True
+            all_property_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
+    
+    if at_least_one_property == False:
+        return ""
+    else:
+        doctext = f"\n{signal_header}\n{property_header}\n{all_property_entry_text}"
+    
+    return doctext
+
+
+# should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
+# generates the variable and signal tables, and all the variable and signal detailed entry bodies
+def _doc_text_properties_table(arg_parser_output: dict) -> str:
     doctext = ""
     signal_header = ""
     property_header = "---\n# Properties\n"
@@ -128,33 +175,54 @@ def _doc_text_properties(arg_parser_output: dict) -> str:
     signal_table_text = ""
     base_variable_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
     variable_table_text = base_variable_table_text
-    all_property_entry_text = ""
 
     if len(arg_parser_output["signals"]) > 0:
         signal_header = "---\n# Signals\n"
         signal_table_text += "| | Signal Name | Signal Arguments |\n| --- | :--- | ---: |\n"
         signal_table_text += _generate_signal_table_row(arg_parser_output["signals"])
-        all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
     
     doctext += "\n# Properties\n\n"
 
     for subsect_key in PROPERTY_SUBSECTION_KEYS:
         if len(arg_parser_output[subsect_key]) > 0:
             variable_table_text += _generate_property_table_row(arg_parser_output[subsect_key])
-            all_property_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
     
     # if the script is empty don't declare the table header
     if variable_table_text == base_variable_table_text:
-        property_header = ""
-        variable_table_text = ""
-    
-    doctext = f"\n{signal_header}\n{signal_table_text}\n{property_header}{variable_table_text}\n{all_property_entry_text}"
-    
-    return doctext
+        return ""
+    else:
+        doctext = f"\n{signal_header}\n{signal_table_text}\n{property_header}{variable_table_text}\n"
+        return doctext
 
 
-def _generate_function_table_row(arg_parser_property_subsection: list) -> str:
-    return ""
+def _generate_function_table_row(arg_parser_property_subsection: list, arg_subsection_key: str) -> str:
+    # verify signal entry is correct
+    if (_validate_function_subsection(arg_parser_property_subsection) != True):
+        return ""
+    full_table_output = ""
+
+    for propdata in arg_parser_property_subsection:
+        # assign entry values
+        # func_prefix = arg_subsection_key # necessary for anchoring to func heading
+        cleaned_prefix = arg_subsection_key.replace("_", " ").lower().replace("funcs", "").strip() # looks better in table
+        func_return = propdata["return"]
+        func_name = propdata["name"]
+        func_name_link = f"{func_return}-{func_name}".replace(" ", "-").lower()
+        func_name = f"[{func_name}](#{func_name_link})"
+        func_args = propdata["arguments"]
+        
+        # need to build string from arg entry
+        func_arg_string = ""
+        if isinstance(func_args, list):
+            for arg_entry in func_args:
+                func_arg_string += f"{_build_argstr(arg_entry)}<br>"
+        
+        # build table
+        table_line = f"| {cleaned_prefix} | **{func_name}** | {func_arg_string} | {func_return}\n"
+        # print("\n\noutp -> ", full_table_output)
+        full_table_output += table_line
+    
+    return full_table_output
 
 
 def _generate_function_subsection(arg_parser_property_subsection: list, arg_subsection_name: str) -> str:
@@ -164,7 +232,7 @@ def _generate_function_subsection(arg_parser_property_subsection: list, arg_subs
 
     for propdata in arg_parser_property_subsection:
         # assign entry values
-        func_prefix = propdata["prefix"]
+        # func_prefix = propdata["prefix"]
         func_name = propdata["name"]
         func_args = propdata["arguments"]
         func_return = propdata["return"]
@@ -177,7 +245,7 @@ def _generate_function_subsection(arg_parser_property_subsection: list, arg_subs
                 func_arg_string += f"- **{_build_argstr(arg_entry)}**\n"
 
         # build detailed entry
-        full_entry_output += f"### ({func_return}) {func_prefix} {func_name}"
+        full_entry_output += f"### ({func_return}) {func_name}"
         full_entry_output += f"\n{func_arg_string}\n"
         if len(func_docstring) > 0:
             full_entry_output += f"\n{func_docstring}\n"
@@ -298,12 +366,12 @@ def _generate_signal_table_row(arg_parser_property_subsection: list) -> str:
         # need to build string from arg entry
         signal_arg_string = ""
         if isinstance(signal_args, list):
-            signal_arg_string = "("
+            # signal_arg_string = "("
             for arg_entry in signal_args:
                 signal_arg_string += f"{_build_argstr(arg_entry)}, "
             # remove last ,
             signal_arg_string = signal_arg_string[:-2]
-            signal_arg_string += ")\n"
+            # signal_arg_string += ")\n"
         
         # build table
         table_line = f"| {prefix} | **{signal_name}** | {signal_arg_string}"
