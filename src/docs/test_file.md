@@ -6,6 +6,14 @@ this is the test documentation for the test file this line should be included in
 (another valid line for the test docs) 
 
 
+
+---
+# Signals
+
+| | Signal Name | Signal Arguments |
+| --- | :--- | ---: |
+| signal | **[test_signal](#signal-test_signal)** | (test_arg1, test_arg2)
+
 ---
 # Properties
 | | Property Name | Property Type | Property Default Value |

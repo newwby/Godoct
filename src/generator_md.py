@@ -99,17 +99,22 @@ def _doc_text_header(arg_parser_output: dict) -> str:
 # should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
 # generates the variable and signal tables, and all the variable and signal detailed entry bodies
 def _doc_text_properties(arg_parser_output: dict) -> str:
-    doctext = "# Properties\n\n"
+    doctext = ""
     
+    signal_table_text = "| | Signal Name | Signal Arguments |\n| --- | :--- | ---: |\n"
     variable_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
-    variable_entry_text = ""
+    all_property_entry_text = ""
 
-    variable_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
+    signal_table_text += _generate_signal_table_row(arg_parser_output["signals"])
+    all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
+    
+    doctext += "\n# Properties\n\n"
+
     for subsect_key in PROPERTY_SUBSECTION_KEYS:
         variable_table_text += _generate_property_table_row(arg_parser_output[subsect_key])
-        variable_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
-
-    doctext = f"---\n# Properties\n{variable_table_text}\n{variable_entry_text}"
+        all_property_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
+    
+    doctext = f"\n---\n# Signals\n\n{signal_table_text}\n---\n# Properties\n{variable_table_text}\n{all_property_entry_text}"
     
     return doctext
 
@@ -166,6 +171,31 @@ def _generate_property_table_row(arg_parser_property_subsection: list) -> str:
     return full_table_output
 
 
+# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
+# is a valid type (dict) and has all valid keys for a subsection
+def _validate_property_subsection(arg_property_subsect: list, arg_is_signal: bool = False) -> bool:
+    if len(arg_property_subsect) < 1:
+        # no error, sometimes subsections are empty
+        # print("_validate_property_subsection length error")
+        return False
+    else:
+        for propdata in arg_property_subsect:
+            if isinstance(propdata, dict) == False:
+                print("_validate_property_subsection type error")
+                return False
+            required_keys = []
+            if arg_is_signal:
+                required_keys = ["prefix", "name", "arguments", "documentation"]
+            else:
+                required_keys = ["prefix", "name", "type", "default", "documentation"]
+            for key in required_keys:
+                if not key in propdata.keys():
+                    print("_validate_property_subsection key error")
+                    return False
+    # else
+    return True
+
+
 # signals have different input and need argument restructuring, so 
 # TODO if you just added an empty arguments key to the property output you could avoid having there be separate method parsers; the output does not need to be different
 # TODO in fact you could output every item from the script with a key (e.g. static func, enum) that tells the parser how to read it and the order to place it in
@@ -205,32 +235,34 @@ def _generate_signal_subsection(arg_parser_property_subsection: list) -> str:
 
 # signals have different input and need argument restructuring, so 
 def _generate_signal_table_row(arg_parser_property_subsection: list) -> str:
-    return ""
+    # verify signal entry is correct
+    if (_validate_property_subsection(arg_parser_property_subsection, True) != True):
+        return ""
+    full_table_output = ""
 
-
-# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
-# is a valid type (dict) and has all valid keys for a subsection
-def _validate_property_subsection(arg_property_subsect: list, arg_is_signal: bool = False) -> bool:
-    if len(arg_property_subsect) < 1:
-        # no error, sometimes subsections are empty
-        # print("_validate_property_subsection length error")
-        return False
-    else:
-        for propdata in arg_property_subsect:
-            if isinstance(propdata, dict) == False:
-                print("_validate_property_subsection type error")
-                return False
-            required_keys = []
-            if arg_is_signal:
-                required_keys = ["prefix", "name", "arguments", "documentation"]
-            else:
-                required_keys = ["prefix", "name", "type", "default", "documentation"]
-            for key in required_keys:
-                if not key in propdata.keys():
-                    print("_validate_property_subsection key error")
-                    return False
-    # else
-    return True
+    for propdata in arg_parser_property_subsection:
+        # assign entry values
+        prefix = "signal"
+        signal_name = propdata["name"]
+        signal_name_link = f"{prefix}-{signal_name}".replace(" ", "-").lower()
+        signal_name = f"[{signal_name}](#{signal_name_link})"
+        signal_args = propdata["arguments"]
+        
+        # need to build string from arg entry
+        signal_arg_string = ""
+        if isinstance(signal_args, list):
+            signal_arg_string = "("
+            for arg_entry in signal_args:
+                signal_arg_string += f"{_build_argstr(arg_entry)}, "
+            # remove last ,
+            signal_arg_string = signal_arg_string[:-2]
+            signal_arg_string += ")\n"
+        
+        # build table
+        table_line = f"| {prefix} | **{signal_name}** | {signal_arg_string}"
+        full_table_output += table_line
+    
+    return full_table_output
 
 
 # should be passed the structured output of parse_and_sort_gdscript
