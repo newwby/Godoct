@@ -239,7 +239,7 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
         }
 
         # TESTING ONLY/REMOVE FOR LIVE
-        debug_print_output_structure = False
+        debug_print_output_structure = True
         if debug_print_output_structure:
             print(f"\nDEBUGGING OUTPUT FOR SCRIPT @ {arg_gdscript_file_path}")
             for key in output_structure:
@@ -254,15 +254,15 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
         return output_structure
 
 # is __main__
+
+# not doing anything right now
 valid_paths = get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
-# for path in get_matched_gdscripts(get_included_file_names(), get_all_gdscript_paths())
-#   generate_markdown(parse_and_sort_gdscript(path))
-parse_and_sort_gdscript(TEST_FILE_PATH)
 
 docs_directory_path = f"{get_own_directory()}\\{GODOCT_DOCS_DIRECTORY}"
 if os.path.exists(docs_directory_path) == False:
     os.mkdir(docs_directory_path)
 
-doc_file_path = f"{docs_directory_path}\\{os.path.basename(TEST_FILE_PATH)}".replace(".gd", ".md")
-doc_file_text = generator_md.get_doc_text(parse_and_sort_gdscript(TEST_FILE_PATH))
-generator_md.create_doc(doc_file_path, doc_file_text)
+for path in valid_paths:
+    doc_file_path = f"{docs_directory_path}\\{os.path.basename(path)}".replace(".gd", ".md")
+    doc_file_text = generator_md.get_doc_text(parse_and_sort_gdscript(path))
+    generator_md.create_doc(doc_file_path, doc_file_text)
