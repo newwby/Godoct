@@ -30,7 +30,7 @@ It includes functions to manually set weather, randomize weather, and adjust int
 
 | | Function Name | Function Arguments | Function Return Value |
 | --- | :--- | :--- | ---: |
-| public | **[set_weather_state](#void-set_weather_state)** | new_state: int<br>intensity: addmethod! = 50<br> | void
+| public | **[set_weather_state](#void-set_weather_state)** | new_state: int<br>intensity: int = 50<br> | void
 | public | **[randomize_weather](#void-randomize_weather)** |  | void
 | public | **[start_transition](#void-start_transition)** | new_state: int<br> | void
 | public | **[adjust_intensity](#void-adjust_intensity)** | new_intensity: int<br> | void
@@ -112,7 +112,7 @@ Timer to manage weather transitions. The timer is used internally to trigger cha
 ## PUBLIC FUNCS
 ### (void) set_weather_state
 - **new_state: int**
-- **intensity: addmethod! = 50**
+- **intensity: int = 50**
 
 
 Function to set the weather to a specific state. Immediately changes the weather to the specified state and resets intensity. Arguments: new_state: The weather state to change to (CLEAR, RAINY, STORMY). intensity: The intensity of the new weather state (default is 50).

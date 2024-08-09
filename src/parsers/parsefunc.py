@@ -71,9 +71,7 @@ def parse_function_line(arg_function_line):
                     arg_split = arg.split(":=")
                     arg_name = arg_split[0].strip()
                     arg_default = arg_split[1].strip()
-                    ## TODO add infer type method to lib
-                    # arg_type = infer_type(arg_default)
-                    arg_type = "addmethod!"
+                    arg_type = utilparser.infer_type(arg_default)
                 else:
                     parsed_var_tuple = utilparser.categorise_property(arg)   
                     arg_name = parsed_var_tuple[0]
