@@ -101,21 +101,33 @@ def _doc_text_header(arg_parser_output: dict) -> str:
 # generates the variable and signal tables, and all the variable and signal detailed entry bodies
 def _doc_text_properties(arg_parser_output: dict) -> str:
     doctext = ""
+    signal_header = ""
+    property_header = "---\n# Properties\n"
     
-    signal_table_text = "| | Signal Name | Signal Arguments |\n| --- | :--- | ---: |\n"
-    variable_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
+    signal_table_text = ""
+    base_variable_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
+    variable_table_text = base_variable_table_text
     all_property_entry_text = ""
 
-    signal_table_text += _generate_signal_table_row(arg_parser_output["signals"])
-    all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
+    if len(arg_parser_output["signals"]) > 0:
+        signal_header = "---\n# Signals\n"
+        signal_table_text += "| | Signal Name | Signal Arguments |\n| --- | :--- | ---: |\n"
+        signal_table_text += _generate_signal_table_row(arg_parser_output["signals"])
+        all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
     
     doctext += "\n# Properties\n\n"
 
     for subsect_key in PROPERTY_SUBSECTION_KEYS:
-        variable_table_text += _generate_property_table_row(arg_parser_output[subsect_key])
-        all_property_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
+        if len(arg_parser_output[subsect_key]) > 0:
+            variable_table_text += _generate_property_table_row(arg_parser_output[subsect_key])
+            all_property_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
     
-    doctext = f"\n---\n# Signals\n\n{signal_table_text}\n---\n# Properties\n{variable_table_text}\n{all_property_entry_text}"
+    # if the script is empty don't declare the table header
+    if variable_table_text == base_variable_table_text:
+        property_header = ""
+        variable_table_text = ""
+    
+    doctext = f"\n{signal_header}\n{signal_table_text}\n{property_header}{variable_table_text}\n{all_property_entry_text}"
     
     return doctext
 

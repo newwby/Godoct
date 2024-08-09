@@ -5,16 +5,8 @@
 
 
 
----
-# Signals
 
-| | Signal Name | Signal Arguments |
-| --- | :--- | ---: |
 
----
-# Properties
-| | Property Name | Property Type | Property Default Value |
-| --- | :--- | :---: | ---: |
 
 
 ---

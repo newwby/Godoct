@@ -5,11 +5,7 @@
 
 
 
----
-# Signals
 
-| | Signal Name | Signal Arguments |
-| --- | :--- | ---: |
 
 ---
 # Properties

@@ -7,11 +7,7 @@ The class includes mechanisms to control logging permissions on a per-object bas
 
 
 
----
-# Signals
 
-| | Signal Name | Signal Arguments |
-| --- | :--- | ---: |
 
 ---
 # Properties
