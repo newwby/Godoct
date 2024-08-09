@@ -35,28 +35,28 @@ this is the test documentation for the test file this line should be included in
 
 | | Function Name | Function Arguments | Function Return Value |
 | --- | :--- | :--- | ---: |
-| static | **[critical](#void-static-funcs-critical)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
-| public | **[debug_critical](#void-public-funcs-debug_critical)** | arg_caller: Object<br>arg_error_message<br> | void
-| public | **[debug_error](#void-public-funcs-debug_error)** | arg_caller: Object<br>arg_error_message<br> | void
-| public | **[debug_info](#void-public-funcs-debug_info)** | arg_caller: Object<br>arg_error_message<br> | void
-| public | **[debug_warning](#void-public-funcs-debug_warning)** | arg_caller: Object<br>arg_error_message<br> | void
-| public | **[error](#void-public-funcs-error)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
-| public | **[get_permission](#bool-public-funcs-get_permission)** | arg_caller: Object<br> | bool
-| public | **[info](#void-public-funcs-info)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
-| public | **[log_stack_trace](#void-public-funcs-log_stack_trace)** | arg_caller: Object<br> | void
-| public | **[reset_permission](#int-public-funcs-reset_permission)** | arg_caller: Object<br> | int
-| public | **[set_permission_default](#void-public-funcs-set_permission_default)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
-| public | **[set_permission_disabled](#void-public-funcs-set_permission_disabled)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
-| public | **[set_permission_elevated](#void-public-funcs-set_permission_elevated)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
-| public | **[store_permission](#void-public-funcs-store_permission)** | arg_caller: Object<br> | void
-| public | **[warning](#void-public-funcs-warning)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
-| private | **[_ready](#void-private-funcs-_ready)** |  | void
-| private | **[_change_permission](#void-private-funcs-_change_permission)** | arg_caller: Object<br>arg_permission<br> | void
-| private | **[_is_permitted](#bool-private-funcs-_is_permitted)** | arg_log_caller: Object<br>arg_show_on_elevated_only: bool<br> | bool
-| private | **[_log](#void-private-funcs-_log)** | arg_caller: Object<br>arg_error_message<br>arg_log_code: int = 0<br>arg_show_on_elevated_only: bool = false<br> | void
-| private | **[_on_logger_startup](#void-private-funcs-_on_logger_startup)** |  | void
-| private | **[_output_log](#void-private-funcs-_output_log)** | arg_next_log: LogRecord<br> | void
-| private | **[_store_log](#void-private-funcs-_store_log)** | arg_log: LogRecord<br> | void
+| static | **[critical](#void-critical)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
+| public | **[debug_critical](#void-debug_critical)** | arg_caller: Object<br>arg_error_message<br> | void
+| public | **[debug_error](#void-debug_error)** | arg_caller: Object<br>arg_error_message<br> | void
+| public | **[debug_info](#void-debug_info)** | arg_caller: Object<br>arg_error_message<br> | void
+| public | **[debug_warning](#void-debug_warning)** | arg_caller: Object<br>arg_error_message<br> | void
+| public | **[error](#void-error)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
+| public | **[get_permission](#bool-get_permission)** | arg_caller: Object<br> | bool
+| public | **[info](#void-info)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
+| public | **[log_stack_trace](#void-log_stack_trace)** | arg_caller: Object<br> | void
+| public | **[reset_permission](#int-reset_permission)** | arg_caller: Object<br> | int
+| public | **[set_permission_default](#void-set_permission_default)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
+| public | **[set_permission_disabled](#void-set_permission_disabled)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
+| public | **[set_permission_elevated](#void-set_permission_elevated)** | arg_caller: Object<br>arg_store_permission: bool = false<br> | void
+| public | **[store_permission](#void-store_permission)** | arg_caller: Object<br> | void
+| public | **[warning](#void-warning)** | arg_caller: Object<br>arg_error_message<br>arg_show_on_elevated_only: bool = false<br> | void
+| private | **[_ready](#void-_ready)** |  | void
+| private | **[_change_permission](#void-_change_permission)** | arg_caller: Object<br>arg_permission<br> | void
+| private | **[_is_permitted](#bool-_is_permitted)** | arg_log_caller: Object<br>arg_show_on_elevated_only: bool<br> | bool
+| private | **[_log](#void-_log)** | arg_caller: Object<br>arg_error_message<br>arg_log_code: int = 0<br>arg_show_on_elevated_only: bool = false<br> | void
+| private | **[_on_logger_startup](#void-_on_logger_startup)** |  | void
+| private | **[_output_log](#void-_output_log)** | arg_next_log: LogRecord<br> | void
+| private | **[_store_log](#void-_store_log)** | arg_log: LogRecord<br> | void
 
 
 ---
@@ -156,7 +156,7 @@ documentation for _log_permission_last_state
 
 ---
 ## STATIC FUNCS
-### (void) static func critical
+### (void) critical
 - **arg_caller: Object**
 - **arg_error_message**
 - **arg_show_on_elevated_only: bool = false**
@@ -168,61 +168,61 @@ critical method docstring, multi-line documentation filtering test this should b
 
 ---
 ## PUBLIC FUNCS
-### (void) func debug_critical
+### (void) debug_critical
 - **arg_caller: Object**
 - **arg_error_message**
 
 
 debug_critical documentation
-### (void) func debug_error
+### (void) debug_error
 - **arg_caller: Object**
 - **arg_error_message**
 
-### (void) func debug_info
+### (void) debug_info
 - **arg_caller: Object**
 - **arg_error_message**
 
-### (void) func debug_warning
+### (void) debug_warning
 - **arg_caller: Object**
 - **arg_error_message**
 
 
 debug ('elevated') logs only appear in the debugger/output/console if the object emitting the log has had their logging permissions elevated use debug/elevated logs to hide logs you only need when debugging
-### (void) func error
+### (void) error
 - **arg_caller: Object**
 - **arg_error_message**
 - **arg_show_on_elevated_only: bool = false**
 
-### (bool) func get_permission
+### (bool) get_permission
 - **arg_caller: Object**
 
-### (void) func info
+### (void) info
 - **arg_caller: Object**
 - **arg_error_message**
 - **arg_show_on_elevated_only: bool = false**
 
-### (void) func log_stack_trace
+### (void) log_stack_trace
 - **arg_caller: Object**
 
-### (int) func reset_permission
+### (int) reset_permission
 - **arg_caller: Object**
 
-### (void) func set_permission_default
-- **arg_caller: Object**
-- **arg_store_permission: bool = false**
-
-### (void) func set_permission_disabled
+### (void) set_permission_default
 - **arg_caller: Object**
 - **arg_store_permission: bool = false**
 
-### (void) func set_permission_elevated
+### (void) set_permission_disabled
 - **arg_caller: Object**
 - **arg_store_permission: bool = false**
 
-### (void) func store_permission
+### (void) set_permission_elevated
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
+
+### (void) store_permission
 - **arg_caller: Object**
 
-### (void) func warning
+### (void) warning
 - **arg_caller: Object**
 - **arg_error_message**
 - **arg_show_on_elevated_only: bool = false**
@@ -232,30 +232,30 @@ debug ('elevated') logs only appear in the debugger/output/console if the object
 
 ---
 ## PRIVATE FUNCS
-### (void) func _ready
+### (void) _ready
 
 
 _ready documentation
-### (void) func _change_permission
+### (void) _change_permission
 - **arg_caller: Object**
 - **arg_permission**
 
-### (bool) func _is_permitted
+### (bool) _is_permitted
 - **arg_log_caller: Object**
 - **arg_show_on_elevated_only: bool**
 
-### (void) func _log
+### (void) _log
 - **arg_caller: Object**
 - **arg_error_message**
 - **arg_log_code: int = 0**
 - **arg_show_on_elevated_only: bool = false**
 
-### (void) func _on_logger_startup
+### (void) _on_logger_startup
 
-### (void) func _output_log
+### (void) _output_log
 - **arg_next_log: LogRecord**
 
-### (void) func _store_log
+### (void) _store_log
 - **arg_log: LogRecord**
 
 
