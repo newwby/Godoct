@@ -6,7 +6,10 @@
 
 ---
 
-- **Documentation at https://godotprototypingframework.readthedocs.io/en/latest/**
+# Example Output
+
+- **GDScript Input**: [https://github.com/newwby/Godoct/blob/main/example/example_gdscript.gd](https://github.com/newwby/Godoct/blob/main/example/example_gdscript.gd)
+- **Markdown Output**: [https://github.com/newwby/Godoct/blob/main/example/example_documentation.md](https://github.com/newwby/Godoct/blob/main/example/example_documentation.md)
 
 ---
 
