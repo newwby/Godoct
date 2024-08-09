@@ -1,1 +1,1 @@
-test_weather_controller.gd
+example_gdscript.gd

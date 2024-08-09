@@ -1,5 +1,7 @@
 extends Node
 
+class_name WeatherController
+
 ## <class_doc>
 ## This script is an example of a fictional "WeatherController" for a game or simulation.
 ## The WeatherController manages different weather states such as clear, rainy, and stormy,

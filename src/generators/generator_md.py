@@ -144,10 +144,11 @@ def _doc_text_properties_detailed(arg_parser_output: dict) -> str:
     property_header = "---\n# Properties\n"
     
     all_property_entry_text = ""
+    signal_text_output = ""
 
     if len(arg_parser_output["signals"]) > 0:
         signal_header = "---\n# Signals\n"
-        all_property_entry_text += (_generate_signal_subsection(arg_parser_output["signals"]))
+        signal_text_output += (_generate_signal_subsection(arg_parser_output["signals"]))
     
     doctext += "\n# Properties\n\n"
 
@@ -160,7 +161,7 @@ def _doc_text_properties_detailed(arg_parser_output: dict) -> str:
     if at_least_one_property == False:
         return ""
     else:
-        doctext = f"\n{signal_header}\n{property_header}\n{all_property_entry_text}"
+        doctext = f"\n{signal_header}\n{signal_text_output}\n{property_header}\n{all_property_entry_text}"
     
     return doctext
 

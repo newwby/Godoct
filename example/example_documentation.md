@@ -1,4 +1,4 @@
-# test weather controller    
+# WeatherController   
 **Extends** Node
         
 This script is an example of a fictional "WeatherController" for a game or simulation. The WeatherController manages different weather states such as clear, rainy, and stormy, and handles transitions between these states. It includes functions to manually set weather, randomize weather, and adjust intensity. Properties include current weather state, weather intensity, and transition speed. This script is designed to be attached to a Node that will serve as the central controller for all weather-related effects in the scene. 
@@ -39,9 +39,6 @@ This script is an example of a fictional "WeatherController" for a game or simul
 ---
 # Signals
 
----
-# Properties
-
 
 ---
 ## SIGNALS
@@ -50,6 +47,10 @@ This script is an example of a fictional "WeatherController" for a game or simul
 
 Signal emitted when the weather state changes Connected functions can respond to the new weather state
 
+
+
+---
+# Properties
 
 
 ---
