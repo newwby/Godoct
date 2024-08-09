@@ -1,3 +1,7 @@
+
+PROPERTY_SUBSECTION_KEYS = ["enums", "constants", "exports", "onready", "public_var", "private_var"]
+CREDIT_LINK = "\n---\n*Documentation generated with [Godoct](https://github.com/newwby/Godoct)*"
+
 # expected keys for dict passed to get_doc_text
 structured_input_format = [
         "script_name",
@@ -37,7 +41,7 @@ def get_doc_text(arg_parser_output: dict):
     sep = "\n\n"
     properties = _doc_text_properties(arg_parser_output)
     
-    doc_text_output = f"{text_header}{sep}{properties}"
+    doc_text_output = f"{text_header}{sep}{properties}{CREDIT_LINK}"
     return doc_text_output
     
 
@@ -89,6 +93,16 @@ def _doc_text_header(arg_parser_output: dict):
 # generates all the property bodies
 def _doc_text_properties(arg_parser_output: dict):
     doctext = "# Properties\n\n"
+    
+    variable_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
+    variable_entry_text = ""
+
+    for subsect_key in PROPERTY_SUBSECTION_KEYS:
+        variable_table_text += _generate_property_table_row(arg_parser_output[subsect_key])
+        variable_entry_text += _generate_property_subsection(arg_parser_output[subsect_key], subsect_key)
+
+    doctext = f"---\n# Properties\n{variable_table_text}\n{variable_entry_text}"
+
     # (_generate_property_subsection(arg_parser_output["signals"])) # signals needs special handling it has different keys
     doctext += (_generate_property_subsection(arg_parser_output["enums"], "enums"))
     doctext += (_generate_property_subsection(arg_parser_output["constants"], "constants"))
@@ -100,36 +114,52 @@ def _doc_text_properties(arg_parser_output: dict):
     return doctext
 
 
+# signals have different input and need argument restructuring, so 
+def _generate_signal_subsection(arg_parser_property_subsection: list) -> str:
+    pass
+
+
+# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
+# is a valid type (dict) and has all valid keys for a subsection
+def _validate_property_subsection(arg_property_subsect: list, arg_is_signal: bool = False) -> bool:
+    if len(arg_property_subsect) < 1:
+        # no error, sometimes subsections are empty
+        # print("_validate_property_subsection length error")
+        return False
+    else:
+        for propdata in arg_property_subsect:
+            if isinstance(propdata, dict) == False:
+                print("_validate_property_subsection type error")
+                return False
+            required_keys = []
+            if arg_is_signal:
+                required_keys = ["prefix", "name", "type", "arguments", "documentation"]
+            else:
+                required_keys = ["prefix", "name", "type", "default", "documentation"]
+            for key in required_keys:
+                if not key in propdata.keys():
+                    print("_validate_property_subsection key error")
+                    return False
+    # else
+    return True
+
+
 # from a property nested list (output from parse_and_sort gdscript) generates docs for properties within
-def _generate_property_subsection(arg_parser_property_subsection: list, arg_subsection_name: str):
-    # print("reading ", arg_parser_property_subsection)
-    table_header = "| Property Name | Property Type | Propery Default Value |\n| --- | :---: | ---: |\n"
-    full_table_output = ""
+def _generate_property_subsection(arg_parser_property_subsection: list, arg_subsection_name: str) -> str:
+    if (_validate_property_subsection(arg_parser_property_subsection) != True):
+        return ""
     full_entry_output = ""
 
-    if len(arg_parser_property_subsection) == 0:
-        return ""
-
     for propdata in arg_parser_property_subsection:
-        # validate entry
-        assert(isinstance(propdata, dict))
-        required_keys = ["prefix", "name", "type", "default", "documentation"]
-        for key in required_keys:
-            assert key in propdata.keys()
-        
         # assign entry values
-        # prefix = propdata["prefix"]
+        property_prefix = propdata["prefix"]
         property_name = propdata["name"]
         property_type = propdata["type"]
         property_default = propdata["default"]
         property_docstring = propdata["documentation"]
-        
-        # build table
-        table_line = f"| **{property_name}** | *{property_type}* | {property_default} |\n"
-        full_table_output += table_line
 
         # build detailed entry
-        full_entry_output += f"### {property_name}"
+        full_entry_output += f"### {property_prefix} {property_name}"
         if len(property_type) > 0:
             full_entry_output += f"\n- **type:** {str(property_type).lower()}\n"
         if len(property_default) > 0:
@@ -137,10 +167,28 @@ def _generate_property_subsection(arg_parser_property_subsection: list, arg_subs
         if len(property_docstring) > 0:
             full_entry_output += f"\n{property_docstring}\n"
         
-    output_body = table_header+full_table_output+"\n"+full_entry_output
     subsection_name = arg_subsection_name.upper()
     if subsection_name.endswith("S") == False:
         subsection_name += "S"
 
-    return f"\n---\n## {subsection_name}\n{output_body}\n\n"
+    return f"\n---\n## {subsection_name}\n{full_entry_output}\n\n"
 
+
+def _generate_property_table_row(arg_parser_property_subsection: list) -> str:
+    if (_validate_property_subsection(arg_parser_property_subsection) != True):
+        return ""
+    full_table_output = ""
+
+    for propdata in arg_parser_property_subsection:
+        # assign entry values
+        property_prefix = propdata["prefix"]
+        property_name = propdata["name"]
+        property_type = propdata["type"]
+        property_default = propdata["default"]
+        property_docstring = propdata["documentation"]
+        
+        # build table
+        table_line = f"| {property_prefix} | **{property_name}** | *{property_type}* | {property_default} |\n"
+        full_table_output += table_line
+    
+    return full_table_output
