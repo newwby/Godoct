@@ -91,7 +91,7 @@ def parse_function_line(arg_function_line):
         "prefix": False,
         "name": "NAME_NOT_FOUND",
         "arguments": [],
-        "return": "unspecified"
+        "return": "void"
     }
     # get if static or non-static function
     split_line = arg_function_line
