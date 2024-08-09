@@ -43,5 +43,29 @@
 
 
 
+
+
+
+---
+## STATIC_FUNCS
+### (String) static func clean_file_name
+{func_arg_string}
+### (PackedStringArray) static func get_dir_names_recursive
+{func_arg_string}
+### (Array) static func get_dir_paths
+{func_arg_string}
+### (PackedStringArray) static func get_file_names
+{func_arg_string}
+### (PackedStringArray) static func get_file_paths
+{func_arg_string}
+### (Error) static func save_resource
+{func_arg_string}
+
+if arg_backup is specified, any previous file found will be moved to a separate file with the 'BACKUP_SUFFIX' added to its file name
+### (bool) static func validate_directory
+{func_arg_string}
+
+
+
 ---
 *Documentation generated with [Godoct](https://github.com/newwby/Godoct)*

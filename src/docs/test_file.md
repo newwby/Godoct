@@ -115,5 +115,75 @@ documentation for _log_permission_last_state
 
 
 
+
+
+
+---
+## STATIC_FUNCS
+### (void) static func critical
+{func_arg_string}
+
+critical method docstring, multi-line documentation filtering test this should be three lines into one
+
+
+
+---
+## PUBLIC_FUNCS
+### (void) func debug_critical
+{func_arg_string}
+
+debug_critical documentation
+### (void) func debug_error
+{func_arg_string}
+### (void) func debug_info
+{func_arg_string}
+### (void) func debug_warning
+{func_arg_string}
+
+debug ('elevated') logs only appear in the debugger/output/console if the object emitting the log has had their logging permissions elevated use debug/elevated logs to hide logs you only need when debugging
+### (void) func error
+{func_arg_string}
+### (bool) func get_permission
+{func_arg_string}
+### (void) func info
+{func_arg_string}
+### (void) func log_stack_trace
+{func_arg_string}
+### (int) func reset_permission
+{func_arg_string}
+### (void) func set_permission_default
+{func_arg_string}
+### (void) func set_permission_disabled
+{func_arg_string}
+### (void) func set_permission_elevated
+{func_arg_string}
+### (void) func store_permission
+{func_arg_string}
+### (void) func warning
+{func_arg_string}
+
+
+
+---
+## PRIVATE_FUNCS
+### (unspecified) func _ready
+{func_arg_string}
+
+_ready documentation
+### (void) func _change_permission
+{func_arg_string}
+### (bool) func _is_permitted
+{func_arg_string}
+### (void) func _log
+{func_arg_string}
+### (void) func _on_logger_startup
+{func_arg_string}
+### (void) func _output_log
+{func_arg_string}
+### (void) func _store_log
+{func_arg_string}
+
+
+
 ---
 *Documentation generated with [Godoct](https://github.com/newwby/Godoct)*

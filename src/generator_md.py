@@ -1,5 +1,6 @@
 
 PROPERTY_SUBSECTION_KEYS = ["enums", "constants", "exports", "onready", "public_var", "private_var"]
+FUNCTION_SUBSECTION_KEYS = ["static_funcs", "public_funcs", "private_funcs"]
 CREDIT_LINK = "\n---\n*Documentation generated with [Godoct](https://github.com/newwby/Godoct)*"
 
 # expected keys for dict passed to get_doc_text
@@ -40,8 +41,9 @@ def get_doc_text(arg_parser_output: dict):
     text_header = _doc_text_header(arg_parser_output)
     sep = "\n\n"
     properties = _doc_text_properties(arg_parser_output)
+    functions = _doc_text_functions(arg_parser_output)
     
-    doc_text_output = f"{text_header}{sep}{properties}{CREDIT_LINK}"
+    doc_text_output = f"{text_header}{sep}{properties}{functions}{CREDIT_LINK}"
     return doc_text_output
 
 
@@ -69,7 +71,26 @@ def _build_argstr(arg_argument_entry: dict) -> str:
 # should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
 # generates the function table, and all the function detailed entry bodies
 def _doc_text_functions(arg_parser_output: dict) -> str:
-    return ""
+    doctext = ""
+    func_header = "---\n# Functions\n"
+    
+    base_func_table_text = "| | Property Name | Property Type | Property Default Value |\n| --- | :--- | :---: | ---: |\n"
+    func_table_text = base_func_table_text
+    func_entries_text = ""
+
+    for subsect_key in FUNCTION_SUBSECTION_KEYS:
+        if len(arg_parser_output[subsect_key]) > 0:
+            func_table_text += _generate_function_table_row(arg_parser_output[subsect_key])
+            func_entries_text += _generate_function_subsection(arg_parser_output[subsect_key], subsect_key)
+    
+    # if the script is empty don't declare the table header
+    if func_table_text == base_func_table_text:
+        func_header = ""
+        func_table_text = ""
+    
+    doctext = f"\n{func_header}\n{func_table_text}\n{func_entries_text}"
+    
+    return doctext
 
 
 # should be passed validated (see _verify_doc_text_input) output from parse_and_sort_gdscript
@@ -132,6 +153,42 @@ def _doc_text_properties(arg_parser_output: dict) -> str:
     return doctext
 
 
+def _generate_function_table_row(arg_parser_property_subsection: list) -> str:
+    return ""
+
+
+def _generate_function_subsection(arg_parser_property_subsection: list, arg_subsection_name: str) -> str:
+    if (_validate_function_subsection(arg_parser_property_subsection) != True):
+        return ""
+    full_entry_output = ""
+
+    for propdata in arg_parser_property_subsection:
+        # assign entry values
+        func_prefix = propdata["prefix"]
+        func_name = propdata["name"]
+        func_args = propdata["arguments"]
+        func_return = propdata["return"]
+        func_docstring = propdata["documentation"]
+
+        # need to build string from arg entry
+        func_arg_string = ""
+        if isinstance(func_args, list):
+            for arg_entry in func_args:
+                func_arg_string += f"- {_build_argstr(arg_entry)}\n"
+
+        # build detailed entry
+        full_entry_output += f"### ({func_return}) {func_prefix} {func_name}"
+        full_entry_output += "\n{func_arg_string}\n"
+        if len(func_docstring) > 0:
+            full_entry_output += f"\n{func_docstring}\n"
+        
+    subsection_name = arg_subsection_name.upper()
+    if subsection_name.endswith("S") == False:
+        subsection_name += "S"
+
+    return f"\n---\n## {subsection_name}\n{full_entry_output}\n\n"
+
+
 # from a property nested list (output from parse_and_sort gdscript) generates docs for properties within
 def _generate_property_subsection(arg_parser_property_subsection: list, arg_subsection_name: str) -> str:
     if (_validate_property_subsection(arg_parser_property_subsection) != True):
@@ -182,31 +239,6 @@ def _generate_property_table_row(arg_parser_property_subsection: list) -> str:
         full_table_output += table_line
     
     return full_table_output
-
-
-# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
-# is a valid type (dict) and has all valid keys for a subsection
-def _validate_property_subsection(arg_property_subsect: list, arg_is_signal: bool = False) -> bool:
-    if len(arg_property_subsect) < 1:
-        # no error, sometimes subsections are empty
-        # print("_validate_property_subsection length error")
-        return False
-    else:
-        for propdata in arg_property_subsect:
-            if isinstance(propdata, dict) == False:
-                print("_validate_property_subsection type error")
-                return False
-            required_keys = []
-            if arg_is_signal:
-                required_keys = ["prefix", "name", "arguments", "documentation"]
-            else:
-                required_keys = ["prefix", "name", "type", "default", "documentation"]
-            for key in required_keys:
-                if not key in propdata.keys():
-                    print("_validate_property_subsection key error")
-                    return False
-    # else
-    return True
 
 
 # signals have different input and need argument restructuring, so 
@@ -292,4 +324,51 @@ def _verify_doc_text_input(arg_parser_output: dict) -> bool:
             print(f"_verify_doc_text_input: key {actual_key} exists in get_doc_text input but not expected input")
             is_valid = False
     return is_valid
+
+
+
+# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
+# is a valid type (dict) and has all valid keys for a subsection
+def _validate_function_subsection(arg_property_subsect: list) -> bool:
+    if len(arg_property_subsect) < 1:
+        # no error, sometimes subsections are empty
+        # print("_validate_function_subsection length error")
+        return False
+    else:
+        for propdata in arg_property_subsect:
+            if isinstance(propdata, dict) == False:
+                print("_validate_function_subsection type error")
+                return False
+            required_keys = ["prefix", "name", "arguments", "return", "documentation"]
+            for key in required_keys:
+                if not key in propdata.keys():
+                    print("_validate_function_subsection key error")
+                    return False
+    # else
+    return True
+
+
+# checks whether a property subsection within the structured output of parse_and_sort (see 'PROPERTY_SUBSECTION_KEYS')
+# is a valid type (dict) and has all valid keys for a subsection
+def _validate_property_subsection(arg_property_subsect: list, arg_is_signal: bool = False) -> bool:
+    if len(arg_property_subsect) < 1:
+        # no error, sometimes subsections are empty
+        # print("_validate_property_subsection length error")
+        return False
+    else:
+        for propdata in arg_property_subsect:
+            if isinstance(propdata, dict) == False:
+                print("_validate_property_subsection type error")
+                return False
+            required_keys = []
+            if arg_is_signal:
+                required_keys = ["prefix", "name", "arguments", "documentation"]
+            else:
+                required_keys = ["prefix", "name", "type", "default", "documentation"]
+            for key in required_keys:
+                if not key in propdata.keys():
+                    print("_validate_property_subsection key error")
+                    return False
+    # else
+    return True
 
