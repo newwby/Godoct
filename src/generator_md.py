@@ -81,6 +81,7 @@ def _doc_text_header(arg_parser_output: dict) -> str:
         doc_name = arg_parser_output["class_name"]
     else:
         doc_name = arg_parser_output["script_name"].replace(".gd", "")
+    doc_name = doc_name.replace("_", " ")
     
     # if it is a tool script, prefix with '@tool'
     if arg_parser_output["is_tool"] == True:
