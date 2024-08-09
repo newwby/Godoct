@@ -1,5 +1,5 @@
 import re
-import utilparser
+import parsers.utilparser as utilparser
 
 ## NOTE that class property and function definitions aren't being picked up because they're indented
 

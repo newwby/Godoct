@@ -1,5 +1,3 @@
-import re
-
 # takes a gdscript property or argument (e.g. varname := true, or varname: bool = true) and returns the pieces
 def categorise_property(arg_property):
     var_name = ""

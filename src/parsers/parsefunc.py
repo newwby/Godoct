@@ -1,5 +1,5 @@
 import re
-import utilparser
+import parsers.utilparser as utilparser
 
 # should be passed an open file content
 def find_function_data(arg_file_lines):

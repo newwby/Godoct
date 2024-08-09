@@ -1,7 +1,7 @@
 import os
-import parsefunc
-import parsevar
-import generator_md
+import parsers.parsefunc as parsef
+import parsers.parsevar as parsev
+import generators.generator_md as gen_md
 
 # TODO add more type hinting in func arguments and statically type func return values
 
@@ -156,8 +156,8 @@ def parse_and_sort_gdscript(arg_gdscript_file_path):
                 collecting_documentation = True
         
         # collect and collate property and function information
-        output_all_properties = parsevar.find_var_data(file_content)
-        output_all_functions = parsefunc.find_function_data(file_content)
+        output_all_properties = parsev.find_var_data(file_content)
+        output_all_functions = parsef.find_function_data(file_content)
 
         # sort properties into constituent lists
         all_signals = []
@@ -264,5 +264,5 @@ if os.path.exists(docs_directory_path) == False:
 
 for path in valid_paths:
     doc_file_path = f"{docs_directory_path}\\{os.path.basename(path)}".replace(".gd", ".md")
-    doc_file_text = generator_md.get_doc_text(parse_and_sort_gdscript(path))
-    generator_md.create_doc(doc_file_path, doc_file_text)
+    doc_file_text = gen_md.get_doc_text(parse_and_sort_gdscript(path))
+    gen_md.create_doc(doc_file_path, doc_file_text)
