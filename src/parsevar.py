@@ -76,7 +76,7 @@ def find_var_data(arg_file_lines):
         var_remainder = ""
         for possible_prefix in ["var", "const", "enum"]:
             if possible_prefix in arg_line:
-                var_prefix = str(arg_line.split(possible_prefix)[0]+f" {possible_prefix}").strip()
+                var_prefix = str(arg_line.split(possible_prefix)[0].strip()+f" {possible_prefix}").strip()
                 var_remainder = arg_line.split(possible_prefix)[1].strip()
         output["prefix"] = var_prefix
 
