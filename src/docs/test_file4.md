@@ -1,4 +1,4 @@
-# SORTUTILITY    
+# SortUtility    
 **Extends** Node
         
 

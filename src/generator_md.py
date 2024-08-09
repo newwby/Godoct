@@ -90,7 +90,7 @@ def _doc_text_header(arg_parser_output: dict) -> str:
     parent_class_name = arg_parser_output["class_parent"]
     documentation = arg_parser_output["class_documentation"]
 
-    output_string = f"# {doc_name.upper()}\
+    output_string = f"# {doc_name}\
     \n**Extends** {parent_class_name}\n\
         \n{documentation}\n"
     
