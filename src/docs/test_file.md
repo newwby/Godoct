@@ -34,7 +34,7 @@ this is the test documentation for the test file this line should be included in
 ---
 ## SIGNALS
 ### signal test_signal
-(test_arg1, test_arg2)
+(**test_arg1**, **test_arg2**)
 
 signal documentation
 
@@ -121,9 +121,9 @@ documentation for _log_permission_last_state
 ---
 ## STATIC FUNCS
 ### (void) static func critical
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 critical method docstring, multi-line documentation filtering test this should be three lines into one
@@ -133,63 +133,63 @@ critical method docstring, multi-line documentation filtering test this should b
 ---
 ## PUBLIC FUNCS
 ### (void) func debug_critical
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 debug_critical documentation
 ### (void) func debug_error
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 ### (void) func debug_info
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 ### (void) func debug_warning
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 debug ('elevated') logs only appear in the debugger/output/console if the object emitting the log has had their logging permissions elevated use debug/elevated logs to hide logs you only need when debugging
 ### (void) func error
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 ### (bool) func get_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 ### (void) func info
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 ### (void) func log_stack_trace
-- arg_caller: Object
+- **arg_caller: Object**
 
 ### (int) func reset_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 ### (void) func set_permission_default
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 ### (void) func set_permission_disabled
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 ### (void) func set_permission_elevated
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 ### (void) func store_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 ### (void) func warning
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 
@@ -201,26 +201,26 @@ debug ('elevated') logs only appear in the debugger/output/console if the object
 
 _ready documentation
 ### (void) func _change_permission
-- arg_caller: Object
-- arg_permission
+- **arg_caller: Object**
+- **arg_permission**
 
 ### (bool) func _is_permitted
-- arg_log_caller: Object
-- arg_show_on_elevated_only: bool
+- **arg_log_caller: Object**
+- **arg_show_on_elevated_only: bool**
 
 ### (void) func _log
-- arg_caller: Object
-- arg_error_message
-- arg_log_code: int = 0
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_log_code: int = 0**
+- **arg_show_on_elevated_only: bool = false**
 
 ### (void) func _on_logger_startup
 
 ### (void) func _output_log
-- arg_next_log: LogRecord
+- **arg_next_log: LogRecord**
 
 ### (void) func _store_log
-- arg_log: LogRecord
+- **arg_log: LogRecord**
 
 
 

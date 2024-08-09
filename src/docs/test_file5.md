@@ -117,87 +117,87 @@ Dictionary to store the last state of log permissions for objects, used to rever
 ---
 ## PUBLIC FUNCS
 ### (void) func critical
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Function to log a critical error message Critical logs indicate severe issues that require program termination Arguments: arg_caller: The object making the log call arg_error_message: The error message to log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
 ### (void) func debug_critical
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 Function to log a critical error message only if elevated logging is enabled Arguments: arg_caller: The object making the log call arg_error_message: The error message to log
 ### (void) func error
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Function to log an error message Arguments: arg_caller: The object making the log call arg_error_message: The error message to log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
 ### (void) func debug_error
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 Function to log an error message only if elevated logging is enabled Arguments: arg_caller: The object making the log call arg_error_message: The error message to log
 ### (void) func info
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Function to log an informational message Arguments: arg_caller: The object making the log call arg_error_message: The message to log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
 ### (void) func debug_info
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 Function to log an informational message only if elevated logging is enabled Arguments: arg_caller: The object making the log call arg_error_message: The message to log
 ### (void) func warning
-- arg_caller: Object
-- arg_error_message
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_error_message**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Function to log a warning message Arguments: arg_caller: The object making the log call arg_error_message: The warning message to log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
 ### (void) func debug_warning
-- arg_caller: Object
-- arg_error_message
+- **arg_caller: Object**
+- **arg_error_message**
 
 
 Function to log a warning message only if elevated logging is enabled Arguments: arg_caller: The object making the log call arg_error_message: The warning message to log
 ### (bool) func get_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 
 Function to check if logging is permitted for a caller Determines whether logs from the caller should be processed based on permissions Arguments: arg_caller: The object requesting permission to log Returns: true if logging is permitted, false otherwise
 ### (int) func reset_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 
 Function to reset the logging permission for a caller to the previous state Arguments: arg_caller: The object whose permission should be reset Returns: OK if the permission was reset successfully, ERR_INVALID_PARAMETER if not
 ### (void) func set_permission_default
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 
 Function to set the default logging permission for a caller Arguments: arg_caller: The object whose permission should be set to default arg_store_permission: If true, stores the current permission before changing
 ### (void) func set_permission_disabled
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 
 Function to disable logging permission for a caller Arguments: arg_caller: The object whose logging permission should be disabled arg_store_permission: If true, stores the current permission before changing
 ### (void) func set_permission_elevated
-- arg_caller: Object
-- arg_store_permission: bool = false
+- **arg_caller: Object**
+- **arg_store_permission: bool = false**
 
 
 Function to elevate logging permission for a caller Elevated permissions allow the caller to log additional messages Arguments: arg_caller: The object whose logging permission should be elevated arg_store_permission: If true, stores the current permission before changing
 ### (void) func store_permission
-- arg_caller: Object
+- **arg_caller: Object**
 
 
 Function to store the current logging permission for a caller Arguments: arg_caller: The object whose permission state should be stored
@@ -211,22 +211,22 @@ Function to store the current logging permission for a caller Arguments: arg_cal
 
 Function called when the node is added to the scene Initializes the logger, prevents automatic quit, and logs startup information
 ### (void) func _change_permission
-- arg_caller: Object
-- arg_permission
+- **arg_caller: Object**
+- **arg_permission**
 
 
 Internal function to change logging permission for a caller Arguments: arg_caller: The object whose logging permission should be changed arg_permission: The new permission value (true, false, or null)
 ### (bool) func _check_log_permission
-- arg_caller: Object
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Internal function to check if logging is permitted for a caller Ensures that the caller has permission to log before proceeding Arguments: arg_caller: The object requesting to log arg_show_on_elevated_only: If true, only allows logging if the caller has elevated permissions Returns: true if logging is permitted, false otherwise
 ### (void) func _log
-- arg_caller: Object
-- arg_log_message
-- arg_log_code_id: int = 0
-- arg_show_on_elevated_only: bool = false
+- **arg_caller: Object**
+- **arg_log_message**
+- **arg_log_code_id: int = 0**
+- **arg_show_on_elevated_only: bool = false**
 
 
 Internal function to handle all logging operations Constructs and stores the log record, and outputs it if permitted Arguments: arg_caller: The object making the log call arg_log_message: The message to log arg_log_code_id: The severity level of the log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
@@ -235,13 +235,13 @@ Internal function to handle all logging operations Constructs and stores the log
 
 Function to log the initial startup message when the logger is initialized Gathers system information and logs it to indicate the logger is ready
 ### (void) func _output_log
-- arg_log_record: LogRecord
+- **arg_log_record: LogRecord**
 
 
 Internal function to output a log record to the console Prints the log message to the console if allowed, and tracks output count Arguments: arg_log_record: The log record to output
 ### (void) func _register_log
-- arg_caller: Object
-- arg_log_record: LogRecord
+- **arg_caller: Object**
+- **arg_log_record: LogRecord**
 
 
 Internal function to store a log record in the log register Adds the log record to the appropriate entry in the register if allowed Arguments: arg_caller: The object making the log call arg_log_record: The log record to store

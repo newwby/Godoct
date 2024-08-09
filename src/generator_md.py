@@ -174,7 +174,7 @@ def _generate_function_subsection(arg_parser_property_subsection: list, arg_subs
         func_arg_string = ""
         if isinstance(func_args, list):
             for arg_entry in func_args:
-                func_arg_string += f"- {_build_argstr(arg_entry)}\n"
+                func_arg_string += f"- **{_build_argstr(arg_entry)}**\n"
 
         # build detailed entry
         full_entry_output += f"### ({func_return}) {func_prefix} {func_name}"
@@ -267,7 +267,7 @@ def _generate_signal_subsection(arg_parser_property_subsection: list) -> str:
         if isinstance(signal_args, list):
             signal_arg_string = "("
             for arg_entry in signal_args:
-                signal_arg_string += f"{_build_argstr(arg_entry)}, "
+                signal_arg_string += f"**{_build_argstr(arg_entry)}**, "
             # remove last ,
             signal_arg_string = signal_arg_string[:-2]
             signal_arg_string += ")\n"
