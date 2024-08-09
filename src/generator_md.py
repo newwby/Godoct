@@ -183,6 +183,8 @@ def _generate_property_table_row(arg_parser_property_subsection: list) -> str:
         # assign entry values
         property_prefix = propdata["prefix"]
         property_name = propdata["name"]
+        property_name_link = f"{property_prefix}-{property_name}".replace(" ", "-").replace("@", "").lower()
+        property_name = f"[{property_name}](#{property_name_link})"
         property_type = propdata["type"]
         property_default = propdata["default"]
         property_docstring = propdata["documentation"]
