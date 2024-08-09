@@ -1,7 +1,9 @@
-# WeatherController   
+# WeatherController    
 **Extends** Node
         
-This script is an example of a fictional "WeatherController" for a game or simulation. The WeatherController manages different weather states such as clear, rainy, and stormy, and handles transitions between these states. It includes functions to manually set weather, randomize weather, and adjust intensity. Properties include current weather state, weather intensity, and transition speed. This script is designed to be attached to a Node that will serve as the central controller for all weather-related effects in the scene. 
+This script is an example of a fictional "WeatherController" for a game or simulation. The WeatherController manages different weather states such as clear, rainy, and stormy, and handles transitions between these states.  
+
+It includes functions to manually set weather, randomize weather, and adjust intensity. Properties include the current weather state, weather intensity, and transition speed. This script is designed to be attached to a Node that will serve as the central controller for all weather-related effects in the scene. 
 
 
 
@@ -32,6 +34,8 @@ This script is an example of a fictional "WeatherController" for a game or simul
 | public | **[randomize_weather](#void-randomize_weather)** |  | void
 | public | **[start_transition](#void-start_transition)** | new_state: int<br> | void
 | public | **[adjust_intensity](#void-adjust_intensity)** | new_intensity: int<br> | void
+| public | **[get_weather_state_string](#string-get_weather_state_string)** |  | String
+| public | **[print_weather_status](#void-print_weather_status)** |  | void
 | private | **[_ready](#void-_ready)** |  | void
 | private | **[_on_transition_timer_timeout](#void-_on_transition_timer_timeout)** |  | void
 
@@ -45,7 +49,7 @@ This script is an example of a fictional "WeatherController" for a game or simul
 ### signal weather_state_changed
 (**new_state: int**)
 
-Signal emitted when the weather state changes Connected functions can respond to the new weather state
+Signal emitted when the weather state changes. Connected functions can respond to the new weather state.
 
 
 
@@ -60,7 +64,7 @@ Signal emitted when the weather state changes Connected functions can respond to
 
 - *[default value = clear, rainy, stormy]*
 
-Enumerated weather states to define possible weather conditions
+Enumerated weather states to define possible weather conditions.
 
 
 
@@ -71,7 +75,7 @@ Enumerated weather states to define possible weather conditions
 
 - *[default value = weather_state.clear]*
 
-Exported property to control the initial weather state The weather state can be set to CLEAR, RAINY, or STORMY
+Exported property to control the initial weather state. The weather state can be set to CLEAR, RAINY, or STORMY.
 
 
 
@@ -82,21 +86,21 @@ Exported property to control the initial weather state The weather state can be 
 
 - *[default value = initial_weather_state]*
 
-Property to store the current weather state This will change as weather transitions occur
+Property to store the current weather state. This will change as weather transitions occur.
 ### var weather_intensity
 - *[default value = 50]*
 
-Property to control the intensity of the current weather Ranges from 0 (no intensity) to 100 (maximum intensity)
+Property to control the intensity of the current weather. Ranges from 0 (no intensity) to 100 (maximum intensity).
 ### var transition_speed
 - **type:** float
 
 - *[default value = 1.0]*
 
-Property to control the speed of weather transitions Speed is defined as the time it takes to fully transition from one state to another
+Property to control the speed of weather transitions. Speed is defined as the time it takes to fully transition from one state to another.
 ### var transition_timer
 - **type:** timer
 
-Timer to manage weather transitions The timer is used internally to trigger changes in weather state
+Timer to manage weather transitions. The timer is used internally to trigger changes in the weather state.
 
 
 
@@ -111,21 +115,29 @@ Timer to manage weather transitions The timer is used internally to trigger chan
 - **intensity: addmethod! = 50**
 
 
-Function to set the weather to a specific state Immediately changes the weather to the specified state and resets intensity Arguments: new_state: The weather state to change to (CLEAR, RAINY, STORMY) intensity: The intensity of the new weather state (default is 50)
+Function to set the weather to a specific state. Immediately changes the weather to the specified state and resets intensity. Arguments: new_state: The weather state to change to (CLEAR, RAINY, STORMY). intensity: The intensity of the new weather state (default is 50).
 ### (void) randomize_weather
 
 
-Function to randomize the weather state Randomly selects a weather state and sets it with a random intensity
+Function to randomize the weather state. Randomly selects a weather state and sets it with a random intensity.
 ### (void) start_transition
 - **new_state: int**
 
 
-Function to start a gradual transition to a new weather state Begins the transition process which will occur over the set transition speed Arguments: new_state: The weather state to transition to (CLEAR, RAINY, STORMY)
+Function to start a gradual transition to a new weather state. Begins the transition process which will occur over the set transition speed. Arguments: new_state: The weather state to transition to (CLEAR, RAINY, STORMY).
 ### (void) adjust_intensity
 - **new_intensity: int**
 
 
-Function to adjust the intensity of the current weather Changes the intensity without altering the current weather state Arguments: new_intensity: The new intensity level (0 to 100)
+Function to adjust the intensity of the current weather. Changes the intensity without altering the current weather state. Arguments: new_intensity: The new intensity level (0 to 100).
+### (String) get_weather_state_string
+
+
+Function to get the current weather state as a string. Returns a human-readable string representation of the current weather state. Returns: The current weather state as a string (e.g., "Clear", "Rainy", "Stormy").
+### (void) print_weather_status
+
+
+Function to print the current weather status. Outputs a summary of the current weather state and intensity to the console.
 
 
 
@@ -134,11 +146,11 @@ Function to adjust the intensity of the current weather Changes the intensity wi
 ### (void) _ready
 
 
-Function called when the node is added to the scene Initializes the weather controller by setting up the transition timer and starting the initial weather state
+Function called when the node is added to the scene. Initializes the weather controller by setting up the transition timer. and starting the initial weather state.
 ### (void) _on_transition_timer_timeout
 
 
-Internal function called when the transition timer times out Completes the transition to the new weather state
+Internal function called when the transition timer times out. Completes the transition to the new weather state.
 
 
 
