@@ -13,7 +13,7 @@ this is the test documentation for the test file this line should be included in
 | enum | **[CODE](#enum-code)** | *enum* | UNDEFINED, CRITICAL, ERROR, WARNING, INFO |
 | const | **[STARTUP_LOG_FSTRING](#const-startup_log_fstring)** | *string* | "[{device}] Logger service ready @ {time}" |
 | const | **[LOG_FSTRING](#const-log_fstring)** | *string* | "[t{time}] {caller}t[{type}] | {message}" |
-| @export  var | **[record_logs](#@export--var-record_logs)** | *bool* | true |
+| @export var | **[record_logs](#export-var-record_logs)** | *bool* | true |
 | var | **[allow_log_output](#var-allow_log_output)** | *bool* | true |
 | var | **[allow_log_registration](#var-allow_log_registration)** | *bool* | true |
 | var | **[total_log_calls](#var-total_log_calls)** | *int* | 0 |
@@ -47,7 +47,7 @@ this is the test documentation for the test file this line should be included in
 
 ---
 ## EXPORTS
-### @export  var record_logs
+### @export var record_logs
 - **type:** bool
 
 - *[default value = true]*
@@ -122,7 +122,7 @@ documentation for _log_permission_last_state
 
 ---
 ## EXPORT VARS
-### @export  var record_logs
+### @export var record_logs
 - **type:** bool
 
 - *[default value = true]*
