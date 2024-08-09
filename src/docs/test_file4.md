@@ -15,9 +15,13 @@
 ---
 ## STATIC FUNCS
 ### (void) static func sort_ascending
-{func_arg_string}
+- arg_a
+- arg_b
+
 ### (void) static func sort_descending
-{func_arg_string}
+- arg_a
+- arg_b
+
 
 
 

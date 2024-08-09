@@ -178,7 +178,7 @@ def _generate_function_subsection(arg_parser_property_subsection: list, arg_subs
 
         # build detailed entry
         full_entry_output += f"### ({func_return}) {func_prefix} {func_name}"
-        full_entry_output += "\n{func_arg_string}\n"
+        full_entry_output += f"\n{func_arg_string}\n"
         if len(func_docstring) > 0:
             full_entry_output += f"\n{func_docstring}\n"
         

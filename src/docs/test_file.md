@@ -121,7 +121,10 @@ documentation for _log_permission_last_state
 ---
 ## STATIC FUNCS
 ### (void) static func critical
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+- arg_show_on_elevated_only: bool = false
+
 
 critical method docstring, multi-line documentation filtering test this should be three lines into one
 
@@ -130,58 +133,95 @@ critical method docstring, multi-line documentation filtering test this should b
 ---
 ## PUBLIC FUNCS
 ### (void) func debug_critical
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+
 
 debug_critical documentation
 ### (void) func debug_error
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+
 ### (void) func debug_info
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+
 ### (void) func debug_warning
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+
 
 debug ('elevated') logs only appear in the debugger/output/console if the object emitting the log has had their logging permissions elevated use debug/elevated logs to hide logs you only need when debugging
 ### (void) func error
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+- arg_show_on_elevated_only: bool = false
+
 ### (bool) func get_permission
-{func_arg_string}
+- arg_caller: Object
+
 ### (void) func info
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+- arg_show_on_elevated_only: bool = false
+
 ### (void) func log_stack_trace
-{func_arg_string}
+- arg_caller: Object
+
 ### (int) func reset_permission
-{func_arg_string}
+- arg_caller: Object
+
 ### (void) func set_permission_default
-{func_arg_string}
+- arg_caller: Object
+- arg_store_permission: bool = false
+
 ### (void) func set_permission_disabled
-{func_arg_string}
+- arg_caller: Object
+- arg_store_permission: bool = false
+
 ### (void) func set_permission_elevated
-{func_arg_string}
+- arg_caller: Object
+- arg_store_permission: bool = false
+
 ### (void) func store_permission
-{func_arg_string}
+- arg_caller: Object
+
 ### (void) func warning
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+- arg_show_on_elevated_only: bool = false
+
 
 
 
 ---
 ## PRIVATE FUNCS
 ### (void) func _ready
-{func_arg_string}
+
 
 _ready documentation
 ### (void) func _change_permission
-{func_arg_string}
+- arg_caller: Object
+- arg_permission
+
 ### (bool) func _is_permitted
-{func_arg_string}
+- arg_log_caller: Object
+- arg_show_on_elevated_only: bool
+
 ### (void) func _log
-{func_arg_string}
+- arg_caller: Object
+- arg_error_message
+- arg_log_code: int = 0
+- arg_show_on_elevated_only: bool = false
+
 ### (void) func _on_logger_startup
-{func_arg_string}
+
 ### (void) func _output_log
-{func_arg_string}
+- arg_next_log: LogRecord
+
 ### (void) func _store_log
-{func_arg_string}
+- arg_log: LogRecord
+
 
 
 
