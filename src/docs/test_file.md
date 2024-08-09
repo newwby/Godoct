@@ -74,7 +74,7 @@ record logs documentation
 
 
 ---
-## PUBLIC_VARS
+## PUBLIC VARS
 ### var allow_log_output
 - **type:** bool
 
@@ -107,7 +107,7 @@ multi-line variable declaration test here's the second line for the multi-line v
 
 
 ---
-## PRIVATE_VARS
+## PRIVATE VARS
 ### var _log_permissions_last_state
 - *[default value = {}]*
 
@@ -119,7 +119,7 @@ documentation for _log_permission_last_state
 
 
 ---
-## STATIC_FUNCS
+## STATIC FUNCS
 ### (void) static func critical
 {func_arg_string}
 
@@ -128,7 +128,7 @@ critical method docstring, multi-line documentation filtering test this should b
 
 
 ---
-## PUBLIC_FUNCS
+## PUBLIC FUNCS
 ### (void) func debug_critical
 {func_arg_string}
 
@@ -165,8 +165,8 @@ debug ('elevated') logs only appear in the debugger/output/console if the object
 
 
 ---
-## PRIVATE_FUNCS
-### (unspecified) func _ready
+## PRIVATE FUNCS
+### (void) func _ready
 {func_arg_string}
 
 _ready documentation

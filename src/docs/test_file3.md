@@ -13,7 +13,7 @@
 
 
 ---
-## STATIC_FUNCS
+## STATIC FUNCS
 ### (bool) static func confirm_connection
 {func_arg_string}
 ### (bool) static func is_valid_in_tree

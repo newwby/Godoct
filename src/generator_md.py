@@ -185,6 +185,7 @@ def _generate_function_subsection(arg_parser_property_subsection: list, arg_subs
     subsection_name = arg_subsection_name.upper()
     if subsection_name.endswith("S") == False:
         subsection_name += "S"
+    subsection_name = subsection_name.replace("_", " ")
 
     return f"\n---\n## {subsection_name}\n{full_entry_output}\n\n"
 
@@ -215,6 +216,7 @@ def _generate_property_subsection(arg_parser_property_subsection: list, arg_subs
     subsection_name = arg_subsection_name.upper()
     if subsection_name.endswith("S") == False:
         subsection_name += "S"
+    subsection_name = subsection_name.replace("_", " ")
 
     return f"\n---\n## {subsection_name}\n{full_entry_output}\n\n"
 

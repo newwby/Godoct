@@ -66,7 +66,7 @@ Variable to control whether logs should be recorded in the log register
 
 
 ---
-## PUBLIC_VARS
+## PUBLIC VARS
 ### var allow_log_output
 - **type:** bool
 
@@ -103,7 +103,7 @@ Dictionary to store logging permissions for each object
 
 
 ---
-## PRIVATE_VARS
+## PRIVATE VARS
 ### var _log_permissions_last_state
 - *[default value = {}]*
 
@@ -115,7 +115,7 @@ Dictionary to store the last state of log permissions for objects, used to rever
 
 
 ---
-## PUBLIC_FUNCS
+## PUBLIC FUNCS
 ### (void) func critical
 {func_arg_string}
 
@@ -176,8 +176,8 @@ Function to store the current logging permission for a caller Arguments: arg_cal
 
 
 ---
-## PRIVATE_FUNCS
-### (unspecified) func _ready
+## PRIVATE FUNCS
+### (void) func _ready
 {func_arg_string}
 
 Function called when the node is added to the scene Initializes the logger, prevents automatic quit, and logs startup information
@@ -193,7 +193,7 @@ Internal function to check if logging is permitted for a caller Ensures that the
 {func_arg_string}
 
 Internal function to handle all logging operations Constructs and stores the log record, and outputs it if permitted Arguments: arg_caller: The object making the log call arg_log_message: The message to log arg_log_code_id: The severity level of the log arg_show_on_elevated_only: If true, only logs if the caller has elevated permissions
-### (unspecified) func _on_logger_startup
+### (void) func _on_logger_startup
 {func_arg_string}
 
 Function to log the initial startup message when the logger is initialized Gathers system information and logs it to indicate the logger is ready

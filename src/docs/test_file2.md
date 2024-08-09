@@ -47,7 +47,7 @@
 
 
 ---
-## STATIC_FUNCS
+## STATIC FUNCS
 ### (String) static func clean_file_name
 {func_arg_string}
 ### (PackedStringArray) static func get_dir_names_recursive
