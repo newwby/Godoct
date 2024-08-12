@@ -3,38 +3,6 @@ import parsers.parsefunc as parsef
 import parsers.parsevar as parsev
 import generators.generator_md as gen_md
 
-## TODO create api index page on doc generation
-## TODO add landing page on running (with /help --h functions, and ignore include (generate all in target directory recursively) flag)
-## TODO add startup arguments that can execute with landing page args
-## TODO potentially investigate walking through the .gd files
-
-## TODO convert all TODO notes to repo issues
-
-# TODO add more type hinting in func arguments and statically type func return values
-
-# TODO create different mains for generating markdown versus generating rst
-#   (move the validating logic to separate pyfile)
-#   (move the parsing/sorting logic to separate pyfile)
-
-## TODO add fstring consts in generation file so can use the same data fetching script and just apply to different fstrings for md vs rst
-
-## TODO pytest setup, tests for
-# - various ways to write args/funcs/vars
-# - comments in weird places
-# - multiline func/var declarations
-# - multiline arguments
-# - different combinations of static typing, default args, neither/either
-
-# TODO write docs/walkthrough on how to write docs for GDscript files to pick up
-#   specify about using ## documentation lines
-#   specify how documentation lines must precede properties/functions
-#   specify about class docstring and how to use empty lines
-#   give examples
-#   specify how the include file works
-
-# TODO add docstrings for sphinx/rtd to pick up
-#   write readme/landing page about Godoct for Github and another for RTD index
-
 ####################################
 
 # TODO move to separate constants file
