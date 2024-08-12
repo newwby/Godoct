@@ -1,5 +1,7 @@
 # Godoct
 
+![Logo](logo_godoct_128px.png?raw=true "Godoct Logo")
+
 - **Automatic markdown documentation generation from your GD files**
 - **Supports Godot 4.3.x**
 - **[MIT License](https://github.com/newwby/Godoct?tab=MIT-1-ov-file)** 
